@@ -18,7 +18,7 @@ export default {}
     border: 1px solid red;
     .icon {
         display: inline-block;
-        /* vertical-align: top; */
+        vertical-align: top;
         margin-top: 6px;
         width: 30px;
         height: 32px;
