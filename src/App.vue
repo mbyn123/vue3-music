@@ -1,8 +1,10 @@
 <template>
-   <div>1111</div>
-  <!-- <router-view/> -->
+    <Header/>
 </template>
 
-<style lang="scss">
+<script setup>
+import Header from '@/components/Header/Header'
+</script>
 
+<style lang='scss'>
 </style>
