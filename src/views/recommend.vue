@@ -1,9 +1,15 @@
 <template>
-  <div>1</div>
+    <div>1</div>
 </template>
 
 <script>
-export default {}
+import { getRecommend } from '@/service/recommend.js'
+export default {
+    async created() {
+        const res = await getRecommend()
+        console.log(res)
+    }
+}
 </script>
 
 <style lang="scss" scoped></style>
