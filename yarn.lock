@@ -932,6 +932,25 @@
     "@babel/helper-validator-identifier" "^7.16.7"
     "to-fast-properties" "^2.0.0"
 
+"@better-scroll/core@^2.4.2":
+  "integrity" "sha512-IqVZLnh04YpaEAy9wJDxtFK/stxVQjB9A9Wcr3Uwkj7Av1TtFpin+t/TObl53diNDG5ZJ+vck/OAthphpuugLA=="
+  "resolved" "https://registry.npmmirror.com/@better-scroll/core/-/core-2.4.2.tgz"
+  "version" "2.4.2"
+  dependencies:
+    "@better-scroll/shared-utils" "^2.4.2"
+
+"@better-scroll/shared-utils@^2.4.2":
+  "integrity" "sha512-Gy/Jfbpu+hq0u+PcjkTqyXGqAf+0dexTzEZ5IDXEVwJVLmd3cx8A73oTcAZ8QZgk4wSHvlMjXecSaptkhnNPEw=="
+  "resolved" "https://registry.npmmirror.com/@better-scroll/shared-utils/-/shared-utils-2.4.2.tgz"
+  "version" "2.4.2"
+
+"@better-scroll/slide@^2.4.2":
+  "integrity" "sha512-VfdFHm/meo4nEyfx0JLn8rUHfQdQCnoBHs/BsV+vmjVivKg+cVgfS+QaytrIulWKqNAWNlfXbAaNtZMv8gNKZg=="
+  "resolved" "https://registry.npmmirror.com/@better-scroll/slide/-/slide-2.4.2.tgz"
+  "version" "2.4.2"
+  dependencies:
+    "@better-scroll/core" "^2.4.2"
+
 "@hapi/address@2.x.x":
   "integrity" "sha512-QD1PhQk+s31P1ixsX0H0Suoupp3VMXzIVMSwobR3F3MSUO2YCV0B7xqLcUw/Bh8yuvd3LhpyqLQWTNcRmp6IdQ=="
   "resolved" "https://registry.npmmirror.com/@hapi/address/-/address-2.1.4.tgz"
