@@ -16,7 +16,8 @@ export default function useSlider(wrapperRef) {
       slide: true,
       momentum: false,
       bounce: false,
-      probeType: 2
+      probeType: 2,
+      click: true
     })
 
     sliderVal.on('slideWillChange', (page) => {
