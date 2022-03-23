@@ -1,6 +1,6 @@
 import BScroll from '@better-scroll/core'
 import ObserveDOM from '@better-scroll/observe-dom'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 BScroll.use(ObserveDOM)
 
@@ -11,5 +11,8 @@ export default function useScoll(wrapperRef, options) {
       observeDOM: true,
       ...options
     })
+  })
+  onUnmounted(() => {
+    scroll.value.destroy()
   })
 }
