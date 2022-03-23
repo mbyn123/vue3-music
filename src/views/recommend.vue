@@ -1,6 +1,6 @@
 <template>
-  <div class="recommend">
-    <Scoll>
+  <div class="recommend" v-loading:[text]="loading">
+    <Scroll>
       <div class="recommend-content">
         <div class="slider-wrapper">
           <div class="slider-content">
@@ -8,7 +8,7 @@
           </div>
         </div>
         <div class="recommend-list">
-          <h1 class="list-title">热门歌单推荐</h1>
+          <h1 class="list-title" v-show="!loading">热门歌单推荐</h1>
           <ul>
             <li class="item" v-for="item in albums" :key="item.id">
               <div class="icon">
@@ -22,25 +22,31 @@
           </ul>
         </div>
       </div>
-    </Scoll>
+    </Scroll>
   </div>
 </template>
 
 <script>
   import { getRecommend } from '@/service/recommend.js'
   import Slider from '@/components/base/Slider/Slider'
-  import Scoll from '@/components/base/Scoll/Scoll'
+  import Scroll from '@/components/base/Scroll/Scroll'
 
   export default {
     data() {
       return {
         sliders: [],
-        albums: []
+        albums: [],
+        text: '加载中...'
       }
     },
     components: {
       Slider,
-      Scoll
+      Scroll
+    },
+    computed: {
+      loading() {
+        return !this.sliders.length && !this.albums.length
+      }
     },
     async mounted() {
       const res = await getRecommend()
