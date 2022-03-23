@@ -1,7 +1,7 @@
 <template>
     <Header />
     <Tab />
-    <router-view></router-view>
+    <router-view/>
 </template>
 
 <script>
