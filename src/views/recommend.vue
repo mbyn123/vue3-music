@@ -1,7 +1,7 @@
 <template>
   <div class="recommend">
-    <Scoll>
-      <div class="recommend-content">
+    <Scoll class="recommend-content">
+      <div>
         <div class="slider-wrapper">
           <div class="slider-content">
             <Slider v-if="sliders.length" :sliders="sliders"/>
