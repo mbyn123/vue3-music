@@ -1,10 +1,35 @@
 <template>
-  <div>2</div>
+  <div class="singer">
+    <IndexList :data="singers"/>
+  </div>
 </template>
 
 <script>
-export default {}
+  import { getSingerList } from '@/service/singer'
+  import IndexList from '@/components/base/InedxList/IndexList'
+
+  export default {
+    data() {
+      return {
+        singers: []
+      }
+    },
+    components: {
+      IndexList
+    },
+    async created() {
+      const res = await getSingerList()
+      this.singers = res.singers
+      console.log(res)
+    }
+  }
 
 </script>
 <style lang='scss' scoped>
+  .singer {
+    position: fixed;
+    top: 88px;
+    bottom: 0;
+    width: 100%;
+  }
 </style>

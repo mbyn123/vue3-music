@@ -10,5 +10,5 @@ import '@/assets/scss/index.scss'
 
 createApp(App).use(store).use(router)
   .directive('loading', loadingDirective)
-  .use(lazyPlugin, { loading: '@/assets/images/default.png' })
+  .use(lazyPlugin, { loading: require('@/assets/images/default.png'), error: require('@/assets/images/default.png') })
   .mount('#app')

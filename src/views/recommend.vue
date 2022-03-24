@@ -1,7 +1,7 @@
 <template>
   <div class="recommend" v-loading:[text]="loading">
-    <Scroll>
-      <div class="recommend-content">
+    <Scroll class="recommend-content">
+      <div >
         <div class="slider-wrapper">
           <div class="slider-content">
             <Slider v-if="sliders.length" :sliders="sliders"/>

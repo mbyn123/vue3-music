@@ -1,29 +1,34 @@
 <template>
   <div ref="rootRef">
-    <slot/>
+    <slot></slot>
   </div>
 </template>
 
 <script>
+  import useScroll from './useScroll'
   import { ref } from 'vue'
-  import useScoll from './useScoll'
 
   export default {
-    name: 'Scoll',
+    name: 'scroll',
     props: {
       click: {
         type: Boolean,
         default: true
+      },
+      probeType: {
+        type: Number,
+        default: 0
       }
     },
-    steup(props) {
+    emits: ['scroll'],
+    setup(props, { emit }) {
       const rootRef = ref(null)
-      useScoll(rootRef, props)
-      return { rootRef }
+      const scroll = useScroll(rootRef, props, emit)
+
+      return {
+        rootRef,
+        scroll
+      }
     }
   }
 </script>
-
-<style lang='scss' scoped>
-
-</style>
