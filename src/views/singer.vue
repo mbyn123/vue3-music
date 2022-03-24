@@ -6,7 +6,7 @@
 
 <script>
   import { getSingerList } from '@/service/singer'
-  import IndexList from '@/components/base/InedxList/IndexList'
+  import IndexList from '@/components/InedxList/IndexList'
 
   export default {
     data() {
@@ -20,7 +20,6 @@
     async created() {
       const res = await getSingerList()
       this.singers = res.singers
-      console.log(res)
     }
   }
 

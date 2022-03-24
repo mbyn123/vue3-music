@@ -1,6 +1,6 @@
 <template>
   <div ref="rootRef">
-    <slot></slot>
+    <slot/>
   </div>
 </template>
 
