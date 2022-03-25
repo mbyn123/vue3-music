@@ -68,7 +68,6 @@ export default function useFixed(props) {
 
   // 滚动组件回调
   function onScroll(option) {
-    // console.log(-option.y)
     scrollY.value = -option.y
   }
 

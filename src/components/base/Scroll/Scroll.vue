@@ -27,6 +27,7 @@
 
       return {
         rootRef,
+        // 将scroll实例暴露出去
         scroll
       }
     }
