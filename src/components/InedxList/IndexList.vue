@@ -2,23 +2,23 @@
   <Scroll class="index-list" ref="scrollRef" :probeType="3" @scroll="onScroll">
     <ul ref="groupRef">
       <li class="group" v-for="group in data" :key="group.title">
-        <h2 class="title">{{group.title}}</h2>
+        <h2 class="title">{{ group.title }}</h2>
         <ul>
-          <li class="item" v-for="item in group.list" :key="item.id">
+          <li class="item" v-for="item in group.list" :key="item.id" @click="onItemClick(item)">
             <img v-lazy="item.pic" alt="" class="avatar">
-            <span class="name">{{item.name}}</span>
+            <span class="name">{{ item.name }}</span>
           </li>
         </ul>
       </li>
     </ul>
     <div class="fixed" :style="fixedStyle" v-show="fixedTitle">
-      <div class="fixed-title">{{fixedTitle}}</div>
+      <div class="fixed-title">{{ fixedTitle }}</div>
     </div>
     <div class="shortcut" @touchstart.stop.prevent="onShortcutTouchStart" @touchmove="onShortcutTouchMove">
       <ul>
         <li v-for="(item,index) in shortcutList" :key="item" :data-index="index" class="item"
             :class="{'current':currentIndex === index}">
-          {{item}}
+          {{ item }}
         </li>
       </ul>
     </div>
@@ -26,118 +26,123 @@
 </template>
 
 <script>
-  import Scroll from '@/components/base/Scroll/Scroll'
-  import useFixed from './useFixed'
-  import useShortcut from './useShortcut'
+import Scroll from '@/components/base/Scroll/Scroll'
+import useFixed from './useFixed'
+import useShortcut from './useShortcut'
 
-  export default {
-    name: 'IndexList',
-    props: {
-      data: {
-        type: Array,
-        default() {
-          return []
-        }
-      }
-    },
-    components: {
-      Scroll
-    },
-    setup(props) {
-      const { groupRef, fixedTitle, fixedStyle, currentIndex, onScroll } = useFixed(props)
-      const { shortcutList, scrollRef, onShortcutTouchStart, onShortcutTouchMove } = useShortcut(props, groupRef)
-      return {
-        groupRef,
-        fixedTitle,
-        fixedStyle,
-        shortcutList,
-        currentIndex,
-        scrollRef,
-        onScroll,
-        onShortcutTouchStart,
-        onShortcutTouchMove
+export default {
+  name: 'IndexList',
+  props: {
+    data: {
+      type: Array,
+      default() {
+        return []
       }
     }
+  },
+  emits: ['selectSinger'],
+  components: {
+    Scroll
+  },
+  setup(props, { emit }) {
+    const { groupRef, fixedTitle, fixedStyle, currentIndex, onScroll } = useFixed(props)
+    const { shortcutList, scrollRef, onShortcutTouchStart, onShortcutTouchMove } = useShortcut(props, groupRef)
+    const onItemClick = (item) => {
+      emit('selectSinger', item)
+    }
+    return {
+      groupRef,
+      fixedTitle,
+      fixedStyle,
+      shortcutList,
+      currentIndex,
+      scrollRef,
+      onItemClick,
+      onScroll,
+      onShortcutTouchStart,
+      onShortcutTouchMove
+    }
   }
+}
 </script>
 
 <style lang="scss" scoped>
-  .index-list {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: $color-background;
+.index-list {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: $color-background;
 
-    .group {
-      padding-bottom: 30px;
+  .group {
+    padding-bottom: 30px;
 
-      .title {
-        height: 30px;
-        line-height: 30px;
-        padding-left: 20px;
-        font-size: $font-size-small;
-        color: $color-text-l;
-        background: $color-highlight-background;
-      }
-
-      .item {
-        display: flex;
-        align-items: center;
-        padding: 20px 0 0 30px;
-
-        .avatar {
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
-        }
-
-        .name {
-          margin-left: 20px;
-          color: $color-text-l;
-          font-size: $font-size-medium;
-        }
-      }
+    .title {
+      height: 30px;
+      line-height: 30px;
+      padding-left: 20px;
+      font-size: $font-size-small;
+      color: $color-text-l;
+      background: $color-highlight-background;
     }
 
-    .fixed {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
+    .item {
+      display: flex;
+      align-items: center;
+      padding: 20px 0 0 30px;
 
-      .fixed-title {
-        height: 30px;
-        line-height: 30px;
-        padding-left: 20px;
-        font-size: $font-size-small;
-        color: $color-text-l;
-        background: $color-highlight-background;
+      .avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
       }
-    }
 
-    .shortcut {
-      position: absolute;
-      right: 4px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 20px;
-      padding: 20px 0;
-      border-radius: 10px;
-      text-align: center;
-      background: $color-background-d;
-      font-family: Helvetica;
-
-      .item {
-        padding: 3px;
-        line-height: 1;
+      .name {
+        margin-left: 20px;
         color: $color-text-l;
-        font-size: $font-size-small;
-
-        &.current {
-          color: $color-theme;
-        }
+        font-size: $font-size-medium;
       }
     }
   }
+
+  .fixed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    .fixed-title {
+      height: 30px;
+      line-height: 30px;
+      padding-left: 20px;
+      font-size: $font-size-small;
+      color: $color-text-l;
+      background: $color-highlight-background;
+    }
+  }
+
+  .shortcut {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    padding: 20px 0;
+    border-radius: 10px;
+    text-align: center;
+    background: $color-background-d;
+    font-family: Helvetica;
+
+    .item {
+      padding: 3px;
+      line-height: 1;
+      color: $color-text-l;
+      font-size: $font-size-small;
+
+      &.current {
+        color: $color-theme;
+      }
+    }
+  }
+}
 </style>
