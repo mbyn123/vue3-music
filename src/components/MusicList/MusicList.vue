@@ -4,6 +4,7 @@
       <i class="icon-back"></i>
     </div>
     <h1 class="title">{{ title }}</h1>
+    <!--背景图-->
     <div ref="bgImageRef" :style="bgImagesStyle" class="bg-image">
       <div class="play-btn-wrapper">
         <div class="play-btn">
@@ -13,6 +14,7 @@
       </div>
       <div :style="filterStyle" class="filter"></div>
     </div>
+    <!--歌曲列表-->
     <Scroll v-loading="loading" :probe-type="3" :style="scrollStyle" class="list" @scroll="scroll">
       <div class="song-list-wrapper">
         <SongList :songs="song" />
