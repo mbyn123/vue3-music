@@ -15,7 +15,8 @@
       <div :style="filterStyle" class="filter"></div>
     </div>
     <!--歌曲列表-->
-    <Scroll v-loading="loading" :probe-type="3" :style="scrollStyle" class="list" @scroll="scroll">
+    <Scroll v-loading="loading" v-noResult:[noResultText]="noResult" :probe-type="3" :style="scrollStyle" class="list"
+            @scroll="scroll">
       <div class="song-list-wrapper">
         <SongList :songs="song" />
       </div>
@@ -39,7 +40,11 @@ export default {
     },
     title: String,
     pic: String,
-    loading: Boolean
+    loading: Boolean,
+    noResultText: {
+      type: String,
+      default: '抱歉，没有找到可播放的歌曲'
+    }
   },
   data() {
     return {
@@ -59,6 +64,9 @@ export default {
     console.log(this.maxTranslateY, 'maxTranslateY')
   },
   computed: {
+    noResult() {
+      return !this.loading && !this.song.length
+    },
     bgImagesStyle() {
       const scrollY = this.scrollY
       let zIndex = 0

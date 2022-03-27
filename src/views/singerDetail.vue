@@ -30,7 +30,7 @@ export default {
       return
     }
     const res = await getSingerDetail(this.computedSinger)
-    this.song = await processSongs(res.songs)
+    await processSongs(res.songs)
     this.loading = false
   },
   components: {
