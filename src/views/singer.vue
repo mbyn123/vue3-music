@@ -8,6 +8,8 @@
 <script>
 import { getSingerList } from '@/service/singer'
 import IndexList from '@/components/InedxList/IndexList'
+import { SINGER_KEY } from '@/assets/js/constant'
+import storage from 'good-storage'
 
 export default {
   data() {
@@ -26,9 +28,13 @@ export default {
   methods: {
     selectSinger(value) {
       this.singerDetail = value
+      this.cacheSinger(value)
       this.$router.push({
         path: `/singer/${value.mid}`
       })
+    },
+    cacheSinger(singer) {
+      storage.session.set(SINGER_KEY, singer)
     }
   }
 }

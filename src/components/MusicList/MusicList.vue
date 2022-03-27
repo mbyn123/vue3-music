@@ -134,7 +134,6 @@ export default {
   }
 
   .title {
-    border: 1px solid red;
     position: absolute;
     top: 0;
     left: 10%;
@@ -153,7 +152,6 @@ export default {
     width: 100%;
     //transform-origin: top;
     background-size: cover;
-    border: 1px solid red;
 
     .play-btn-wrapper {
       position: absolute;
@@ -199,7 +197,6 @@ export default {
   }
 
   .list {
-    border: 1px solid red;
     position: absolute;
     bottom: 0;
     width: 100%;

@@ -1,6 +1,6 @@
 <template>
   <div class="singer-detail">
-    <MusicList :pic="pic" :song="song" :title="title" :loading="loading"/>
+    <MusicList :loading="loading" :pic="pic" :song="song" :title="title" />
   </div>
 </template>
 
@@ -8,7 +8,8 @@
 import { getSingerDetail } from '@/service/singer'
 import { processSongs } from '@/service/song'
 import MusicList from '@/components/MusicList/MusicList'
-import { toRaw } from 'vue'
+import storage from 'good-storage'
+import { SINGER_KEY } from '@/assets/js/constant'
 
 export default {
   name: 'singerDetail',
@@ -22,7 +23,13 @@ export default {
     }
   },
   async created() {
-    const res = await getSingerDetail(this.singer)
+    if (!this.computedSinger) {
+      // 获取上一级路由路径，返回
+      const path = this.$route.matched[0].path
+      this.$router.push({ path })
+      return
+    }
+    const res = await getSingerDetail(this.computedSinger)
     this.song = await processSongs(res.songs)
     this.loading = false
   },
@@ -30,11 +37,28 @@ export default {
     MusicList
   },
   computed: {
+    // 页面刷新从缓存中获取数据
+    computedSinger() {
+      let rel = null
+      const singer = this.singer
+      if (JSON.stringify(singer) !== '{}') {
+        rel = singer
+      } else {
+        const cachedSinger = storage.session.get(SINGER_KEY)
+        console.log(cachedSinger, 'cachedSinger')
+        if (cachedSinger && cachedSinger.mid === this.$route.params.id) {
+          rel = cachedSinger
+        }
+      }
+      return rel
+    },
     title() {
-      return this.singer && toRaw(this.singer.name)
+      const singer = this.computedSinger
+      return singer && singer.name
     },
     pic() {
-      return this.singer && toRaw(this.singer.pic)
+      const singer = this.computedSinger
+      return singer && singer.pic
     }
   }
 }
