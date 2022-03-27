@@ -1,20 +1,21 @@
 <template>
   <div class="music-list">
-    <div class="back">
+    <div class="back" @click="back">
       <i class="icon-back"></i>
     </div>
     <h1 class="title">{{ title }}</h1>
-    <div class="bg-image" :style="bgImagesStyle">
+    <div ref="bgImageRef" :style="bgImagesStyle" class="bg-image">
       <div class="play-btn-wrapper">
         <div class="play-btn">
           <i class="icon-play"></i>
           <span class="text">随机播放全部</span>
         </div>
       </div>
+      <div :style="filterStyle" class="filter"></div>
     </div>
-    <Scroll class="list">
+    <Scroll v-loading="loading" :probe-type="3" :style="scrollStyle" class="list" @scroll="scroll">
       <div class="song-list-wrapper">
-        <SongList :songs="song"/>
+        <SongList :songs="song" />
       </div>
     </Scroll>
   </div>
@@ -24,6 +25,7 @@
 import SongList from '@/components/base/SongList/SongList'
 import Scroll from '@/components/base/Scroll/Scroll'
 
+const TITLE_HEIGHT = 40
 export default {
   name: 'MusicList',
   props: {
@@ -34,21 +36,77 @@ export default {
       }
     },
     title: String,
-    pic: String
+    pic: String,
+    loading: Boolean
+  },
+  data() {
+    return {
+      imageHeight: 0,
+      scrollY: 0,
+      maxTranslateY: 0
+    }
   },
   components: {
     SongList,
     Scroll
   },
   mounted() {
-    console.log(this.title)
+    this.imageHeight = this.$refs.bgImageRef.clientHeight
+    // 计算列表的最大滚动高度
+    this.maxTranslateY = this.imageHeight - TITLE_HEIGHT
+    console.log(this.maxTranslateY, 'maxTranslateY')
   },
   computed: {
     bgImagesStyle() {
-      return {
-        paddingTop: '70%',
-        backgroundImage: `url(${this.pic})`
+      const scrollY = this.scrollY
+      let zIndex = 0
+      let paddingTop = '70%'
+      let height = 0
+      let scale = 1
+      let translateZ = 0
+      // 如果超过最大滚动高度，就动态修改图片样式
+      if (scrollY > this.maxTranslateY) {
+        zIndex = 10
+        paddingTop = '0'
+        height = TITLE_HEIGHT + 'px'
+        translateZ = 1
       }
+      // 如果图片下拉超过最小值，就对图片进行缩放
+      if (scrollY < 0) {
+        scale = 1 + Math.abs(scrollY / this.imageHeight)
+      }
+      return {
+        paddingTop,
+        zIndex,
+        height,
+        backgroundImage: `url(${this.pic})`,
+        transform: `scale(${scale}) translateZ(${translateZ}px)`
+      }
+    },
+    scrollStyle() {
+      return {
+        top: `${this.imageHeight}px`
+      }
+    },
+    filterStyle() {
+      const scrollY = this.scrollY
+      const imageHeight = this.imageHeight
+      let blur = 0
+      // 滚动条上拉遮罩层模糊效果
+      if (scrollY >= 0) {
+        blur = Math.min(this.maxTranslateY / imageHeight, scrollY / imageHeight) * 20
+      }
+      return {
+        backdropFilter: `blur(${blur}px)`
+      }
+    }
+  },
+  methods: {
+    back() {
+      this.$router.back()
+    },
+    scroll(option) {
+      this.scrollY = -option.y
     }
   }
 }
@@ -93,7 +151,7 @@ export default {
   .bg-image {
     position: relative;
     width: 100%;
-    transform-origin: top;
+    //transform-origin: top;
     background-size: cover;
     border: 1px solid red;
 
@@ -102,6 +160,7 @@ export default {
       bottom: 20px;
       z-index: 10;
       width: 100%;
+      display: none;
 
       .play-btn {
         box-sizing: border-box;
@@ -127,6 +186,15 @@ export default {
         vertical-align: middle;
         font-size: $font-size-small;
       }
+    }
+
+    .filter {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(7, 17, 27, 0.4);
     }
   }
 
