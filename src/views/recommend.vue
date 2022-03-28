@@ -1,7 +1,7 @@
 <template>
   <div class="recommend" v-loading:[text]="loading">
     <Scroll class="recommend-content">
-      <div >
+      <div>
         <div class="slider-wrapper">
           <div class="slider-content">
             <Slider v-if="sliders.length" :sliders="sliders"/>
@@ -15,8 +15,8 @@
                 <img width="60" height="60" v-lazy="item.pic" alt="">
               </div>
               <div class="text">
-                <h2 class="name">{{item.username}}</h2>
-                <p class="title">{{item.title}}</p>
+                <h2 class="name">{{ item.username }}</h2>
+                <p class="title">{{ item.title }}</p>
               </div>
             </li>
           </ul>
@@ -27,104 +27,104 @@
 </template>
 
 <script>
-  import { getRecommend } from '@/service/recommend.js'
-  import Slider from '@/components/base/Slider/Slider'
-  import Scroll from '@/components/base/Scroll/Scroll'
+import { getRecommend } from '@/service/recommend.js'
+import Slider from '@/components/base/Slider/Slider'
+import Scroll from '@/components/base/Scroll/Scroll'
 
-  export default {
-    data() {
-      return {
-        sliders: [],
-        albums: [],
-        text: '加载中...'
-      }
-    },
-    components: {
-      Slider,
-      Scroll
-    },
-    computed: {
-      loading() {
-        return !this.sliders.length && !this.albums.length
-      }
-    },
-    async mounted() {
-      const res = await getRecommend()
-      this.sliders = res.sliders
-      this.albums = res.albums
-      // console.log(res)
+export default {
+  data () {
+    return {
+      sliders: [],
+      albums: [],
+      text: '加载中...'
     }
+  },
+  components: {
+    Slider,
+    Scroll
+  },
+  computed: {
+    loading () {
+      return !this.sliders.length && !this.albums.length
+    }
+  },
+  async mounted () {
+    const res = await getRecommend()
+    this.sliders = res.sliders
+    this.albums = res.albums
+    // console.log(res)
   }
+}
 </script>
 
 <style lang="scss" scoped>
-  .recommend {
-    position: fixed;
-    width: 100%;
-    top: 88px;
-    bottom: 0;
-    overflow: scroll;
+.recommend {
+  position: fixed;
+  width: 100%;
+  top: 88px;
+  bottom: 0;
+  overflow: scroll;
 
-    .recommend-content {
-      height: 100%;
+  .recommend-content {
+    height: 100%;
+    overflow: hidden;
+
+    .slider-wrapper {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-top: 40%;
       overflow: hidden;
 
-      .slider-wrapper {
-        position: relative;
+      .slider-content {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
-        height: 0;
-        padding-top: 40%;
-        overflow: hidden;
+        height: 100%;
+      }
+    }
 
-        .slider-content {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-        }
+    .recommend-list {
+      .list-title {
+        height: 65px;
+        line-height: 65px;
+        text-align: center;
+        font-size: $font-size-medium;
+        color: $color-theme;
       }
 
-      .recommend-list {
-        .list-title {
-          height: 65px;
-          line-height: 65px;
-          text-align: center;
-          font-size: $font-size-medium;
-          color: $color-theme;
+      .item {
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        padding: 0 20px 20px 20px;
+
+        .icon {
+          flex: 0 0 60px;
+          padding-right: 20px;
         }
 
-        .item {
+        .text {
+          flex: 1;
           display: flex;
-          align-items: center;
-          box-sizing: border-box;
-          padding: 0 20px 20px 20px;
+          flex-direction: column;
+          justify-content: center;
+          line-height: 20px;
+          overflow: hidden;
+          font-size: $font-size-medium;
 
-          .icon {
-            flex: 0 0 60px;
-            padding-right: 20px;
+          .name {
+            margin-bottom: 10px;
+            color: $color-text;
           }
 
-          .text {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            line-height: 20px;
-            overflow: hidden;
-            font-size: $font-size-medium;
-
-            .name {
-              margin-bottom: 10px;
-              color: $color-text;
-            }
-
-            .title {
-              color: $color-text-d;
-            }
+          .title {
+            color: $color-text-d;
           }
         }
       }
     }
   }
+}
 </style>

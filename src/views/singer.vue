@@ -1,6 +1,6 @@
 <template>
   <div class="singer">
-    <IndexList :data="singers" @selectSinger="selectSinger" />
+    <IndexList :data="singers" @selectSinger="selectSinger"/>
     <router-view v-slot="{ Component }">
       <transition appear name="slide">
         <component :is="Component" :singer="singerDetail"/>
