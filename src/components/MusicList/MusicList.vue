@@ -18,13 +18,14 @@
     <Scroll v-loading="loading" v-noResult:[noResultText]="noResult" :probe-type="3" :style="scrollStyle" class="list"
             @scroll="scroll">
       <div class="song-list-wrapper">
-        <SongList :songs="song" />
+        <SongList :songs="song" @select='selectItem'/>
       </div>
     </Scroll>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import SongList from '@/components/base/SongList/SongList'
 import Scroll from '@/components/base/Scroll/Scroll'
 
@@ -112,11 +113,15 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['selectPlay']),
     back() {
       this.$router.back()
     },
     scroll(option) {
       this.scrollY = -option.y
+    },
+    selectItem({ item, index }) {
+      this.selectPlay({ list: this.song, index })
     }
   }
 }
@@ -126,7 +131,6 @@ export default {
 .music-list {
   position: relative;
   height: 100%;
-  border: 1px solid green;
 
   .back {
     position: absolute;
