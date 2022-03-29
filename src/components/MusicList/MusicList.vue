@@ -6,8 +6,8 @@
     <h1 class="title">{{ title }}</h1>
     <!--背景图-->
     <div ref="bgImageRef" :style="bgImagesStyle" class="bg-image">
-      <div class="play-btn-wrapper">
-        <div class="play-btn">
+      <div class="play-btn-wrapper" :style='playBtnStyle'>
+        <div class="play-btn" @click="random">
           <i class="icon-play"></i>
           <span class="text">随机播放全部</span>
         </div>
@@ -65,6 +65,15 @@ export default {
     console.log(this.maxTranslateY, 'maxTranslateY')
   },
   computed: {
+    playBtnStyle() {
+      let display = ''
+      if (this.scrollY >= this.maxTranslateY) {
+        display = 'none'
+      }
+      return {
+        display
+      }
+    },
     noResult() {
       return !this.loading && !this.song.length
     },
@@ -113,15 +122,20 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['selectPlay']),
+    ...mapActions(['selectPlay', 'randomPlay']),
     back() {
       this.$router.back()
     },
     scroll(option) {
       this.scrollY = -option.y
     },
+    // 播放歌曲,顺序播放
     selectItem({ item, index }) {
       this.selectPlay({ list: this.song, index })
+    },
+    // 随机播放
+    random() {
+      this.randomPlay(this.song)
     }
   }
 }
@@ -172,7 +186,6 @@ export default {
       bottom: 20px;
       z-index: 10;
       width: 100%;
-      display: none;
 
       .play-btn {
         box-sizing: border-box;
