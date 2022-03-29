@@ -45,7 +45,6 @@ export default {
         rel = singer
       } else {
         const cachedSinger = storage.session.get(SINGER_KEY)
-        console.log(cachedSinger, 'cachedSinger')
         if (cachedSinger && cachedSinger.mid === this.$route.params.id) {
           rel = cachedSinger
         }
