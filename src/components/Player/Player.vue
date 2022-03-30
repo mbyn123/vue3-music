@@ -16,14 +16,14 @@
           <div class="icon i-left">
             <i class='icon-sequence'></i>
           </div>
-          <div class="icon i-left">
-            <i class="icon-prev"></i>
+          <div class="icon i-left" :class='disableClass'>
+            <i class="icon-prev" @click='previous'></i>
           </div>
-          <div class="icon i-center">
+          <div class="icon i-center" :class='disableClass'>
             <i :class='playIcon' @click='togglePlay'></i>
           </div>
-          <div class="icon i-right">
-            <i class="icon-next"></i>
+          <div class="icon i-right" :class='disableClass'>
+            <i class="icon-next" @click='next'></i>
           </div>
           <div class="icon i-right">
             <i class='icon-favorite'></i>
@@ -31,7 +31,7 @@
         </div>
       </div>
     </div>
-    <audio ref='audioRef'></audio>
+    <audio ref='audioRef' @pause='pause' @canplay='ready' @error='error'/>
   </div>
 </template>
 
@@ -44,50 +44,132 @@ export default {
   setup() {
     const audioRef = ref(null)
     const store = useStore()
+    const songReady = ref(false)
+
     const currentSong = computed(() => store.getters.currentSong)
     const fullScreen = computed(() => store.state.fullScreen)
     // 歌曲播放状态 播放/暂停
     const playing = computed(() => store.state.playing)
-
+    // 播放/暂停 图标切换
     const playIcon = computed(() => !playing.value ? 'icon-play' : 'icon-pause')
+    // 当前曲播放的索引下标
+    const currentIndex = computed(() => store.state.currentIndex)
+    // 播放列表
+    const playList = computed(() => store.state.playList)
 
-    // 播放歌曲
+    const disableClass = computed(() => songReady.value ? '' : 'disable')
+
+    // 监听当前播放的歌曲
     watch(currentSong, (newSong) => {
       if (!newSong.id || !newSong.url) {
         return
       }
+      songReady.value = false
       // 如果当前歌曲存在就播放歌曲
       const audioEl = audioRef.value
       audioEl.src = newSong.url
       audioEl.play()
     })
 
-    // 播放/暂停
+    // 监听歌曲播放状态
     watch(playing, (newPlaying) => {
       const audioEl = audioRef.value
-      if (newPlaying) {
-        audioEl.play()
-      } else {
-        audioEl.pause()
+      // 歌曲没有加载完成，就不播放
+      if (!songReady.value) {
+        return
       }
+      // 控制播放器播放/暂停歌曲
+      newPlaying ? audioEl.play() : audioEl.pause()
     })
 
+    // 切换播放器模式
     const back = () => {
       store.commit('setFullScreen', false)
     }
 
+    // 点击切换播放/暂停状态
     const togglePlay = () => {
-      console.log('1111')
       store.commit('setPlayingState', !playing.value)
     }
 
+    // 下一首
+    const next = () => {
+      let index = currentIndex.value + 1
+      const list = playList.value
+      if (!list.length || !songReady.value) {
+        return
+      }
+      if (list.length === 1) {
+        return loop()
+      }
+      // 如果只有一首歌就重复播放当前这首歌
+      if (index === list.length) {
+        index = 0
+      }
+      store.commit('setCurrentIndex', index)
+      if (!playing.value) {
+        store.commit('setPlayingState', true)
+      }
+    }
+
+    // 上一首
+    const previous = () => {
+      let index = currentIndex.value - 1
+      const list = playList.value
+      if (!list.length || !songReady.value) {
+        return
+      }
+      if (list.length === 1) {
+        return loop()
+      }
+      if (index === -1) {
+        index = list.length - 1
+      }
+      store.commit('setCurrentIndex', index)
+      if (!playing.value) {
+        store.commit('setPlayingState', true)
+      }
+    }
+
+    // 循环播放
+    const loop = () => {
+      const audioEl = audioRef.value
+      audioEl.currentTime = 0
+      audioEl.play()
+      store.commit('setPlayingState', true)
+    }
+
+    // 播放器停止播放回调
+    const pause = () => {
+      // 同步歌曲状态
+      store.commit('setPlayingState', false)
+    }
+
+    // 播放器歌曲加载成功回调
+    const ready = () => {
+      if (songReady.value) {
+        return
+      }
+      songReady.value = true
+    }
+
+    // 播放器播放异常回调
+    const error = () => {
+      songReady.value = true
+    }
     return {
       currentSong,
       fullScreen,
       audioRef,
       playIcon,
+      disableClass,
+      pause,
       back,
-      togglePlay
+      togglePlay,
+      next,
+      previous,
+      ready,
+      error
     }
   }
 }
@@ -173,6 +255,10 @@ export default {
         .icon {
           flex: 1;
           color: $color-theme;
+
+          &.disable {
+            color: $color-theme-d;
+          }
 
           i {
             font-size: 30px;

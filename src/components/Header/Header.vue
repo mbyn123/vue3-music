@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <span class="icon"></span>
-    <h1 class="text">web音乐</h1>
+    <h1 class="text">web music</h1>
   </div>
 </template>
 
