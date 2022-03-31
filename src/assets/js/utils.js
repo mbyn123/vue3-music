@@ -18,3 +18,10 @@ const swap = (arr, j, i) => {
   arr[i] = arr[j]
   arr[j] = t
 }
+
+export const formatTime = (num) => {
+  num = num | 0
+  const minute = ((num / 60 | 0) + '').padStart(2, '0')
+  const second = (num % 60 + '').padStart(2, '0')
+  return `${minute}:${second}`
+}
