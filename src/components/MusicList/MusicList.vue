@@ -133,7 +133,7 @@ export default {
     selectItem({ item, index }) {
       this.selectPlay({ list: this.song, index })
     },
-    // 随机播放
+    // 全部随机播放
     random() {
       this.randomPlay(this.song)
     }

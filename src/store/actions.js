@@ -21,3 +21,20 @@ export const randomPlay = ({ commit }, list) => {
   commit('setFullScreen', true)
   commit('setCurrentIndex', 0)
 }
+
+// 切换播放模式
+export const changeMode = ({ commit, state, getters }, mode) => {
+  const currentId = getters.currentSong.id
+  // 如果是随机播放模式
+  if (mode === PLAY_MODE.random) {
+    // 就将默认歌曲列表顺序打乱
+    commit('setPlayList', shuffle(state.sequenceList))
+  } else {
+    commit('setPlayList', state.sequenceList)
+  }
+  // 获取当前正在播放歌曲的索引下标
+  const index = state.playList.findIndex((item) => item.id === currentId)
+  // 避免在切换模式，打乱播放列表顺序后会影响当前播放的歌曲
+  commit('setCurrentIndex', index)
+  commit('setPlayMode', mode)
+}

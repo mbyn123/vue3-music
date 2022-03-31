@@ -1,5 +1,5 @@
 export const shuffle = (source) => {
-  const arr = source.slice() // 避免修改原数据
+  const arr = source.slice() // 避免修改原数据，返回一个新的数组
   for (let i = 0; i < arr.length; i++) {
     const j = getRandomInt(i)
     swap(arr, j, i)
