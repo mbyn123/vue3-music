@@ -26,7 +26,7 @@ export default {
     }
   },
   created() {
-    // 创建变量保存触摸相关的数据
+    // 创建变量保存触摸相关的数据,避免在data中创建数据变化后重复渲染
     this.touch = {}
   },
   watch: {
