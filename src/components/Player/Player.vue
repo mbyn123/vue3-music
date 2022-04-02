@@ -11,8 +11,9 @@
         <div class='title'>{{ currentSong.name }}</div>
         <div class='sub-title'>{{ currentSong.singer }}</div>
       </div>
-      <div class='middle'>
-        <div class='middle-l' v-show='true'>
+      <div class='middle' @touchstart.prevent='onTouchStart' @touchmove.prevent='onTouchMove' @touchend='onTouchEnd'>
+        <!--旋转CD-->
+        <div class='middle-l'>
           <div class='cd-wrapper'>
             <div class='cd' ref='cdRef'>
               <img :src='currentSong.pic' alt='' ref='cdImageRef' class='image' :class='cdClass'>
@@ -22,19 +23,26 @@
             <div class="playing-lyric">{{ playingLyric }}</div>
           </div>
         </div>
-        <Scroll class='middle-r' ref='lyricScrollRef' v-show='false'>
+        <!--歌词列表-->
+        <Scroll class='middle-r' ref='lyricScrollRef'>
           <div class='lyric-wrapper'>
             <div v-if='currentLyric' ref='lyricListRef'>
               <p class='text' :class="{'current': currentLineNum === index}" v-for='(item,index) in currentLyric.lines'
                  :key='item.num'>{{ item.txt }}</p>
             </div>
             <div class="pure-music" v-show="pureMusicLyric">
-              <p>{{pureMusicLyric}}</p>
+              <p>{{ pureMusicLyric }}</p>
             </div>
           </div>
         </Scroll>
       </div>
       <div class='bottom'>
+        <!--指示点-->
+        <div class="dot-wrapper">
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+        <!--进度条-->
         <div class='progress-wrapper'>
           <span class='time time-left'>{{ formatTime(currentTime) }}</span>
           <div class='progress-bar-wrapper'>
@@ -42,6 +50,7 @@
           </div>
           <span class='time time-right'>{{ formatTime(currentSong.duration) }}</span>
         </div>
+        <!--播放按钮-->
         <div class="operators">
           <div class="icon i-left">
             <i :class='modeIcon' @click='changeMode'></i>
@@ -76,6 +85,7 @@ import { PLAY_MODE } from '@/assets/js/constant'
 import useCd from '@/components/Player/useCd'
 import useLyric from '@/components/Player/useLyric'
 import Scroll from '@/components/base/Scroll/Scroll'
+import useInteractive from '@/components/Player/useInteractive'
 
 export default {
   name: 'Player',
@@ -106,6 +116,11 @@ export default {
       songReady,
       currentTime
     })
+    const {
+      onTouchStart,
+      onTouchMove,
+      onTouchEnd
+    } = useInteractive()
 
     const currentSong = computed(() => store.getters.currentSong)
     const fullScreen = computed(() => store.state.fullScreen)
@@ -302,7 +317,10 @@ export default {
       toggleFavorite,
       formatTime,
       changeTouchMove,
-      changeTouchEnd
+      changeTouchEnd,
+      onTouchStart,
+      onTouchMove,
+      onTouchEnd
     }
   }
 }
@@ -338,7 +356,6 @@ export default {
     .top {
       position: relative;
       margin-bottom: 25px;
-      border: 1px solid red;
 
       .back {
         position: absolute;
@@ -364,7 +381,6 @@ export default {
         @include no-wrap();
         font-size: $font-size-large;
         color: $color-text;
-        border: 1px solid red;
       }
 
       .sub-title {
@@ -382,14 +398,12 @@ export default {
       bottom: 170px;
       white-space: nowrap;
       font-size: 0;
-      border: 1px solid green;
 
       .middle-l {
         position: absolute;
         width: 100%;
         height: 0;
         padding-top: 80%;
-        border: 1px solid;
 
         .cd-wrapper {
           position: absolute;
@@ -398,13 +412,11 @@ export default {
           width: 80%;
           height: 100%;
           box-sizing: border-box;
-          border: 1px solid;
 
           .cd {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 1px solid red;
 
             .image {
               position: absolute;
@@ -428,7 +440,6 @@ export default {
           margin: 30px auto 0 auto;
           overflow: hidden;
           text-align: center;
-          border: 1px solid;
 
           .playing-lyric {
             height: 20px;
@@ -445,14 +456,12 @@ export default {
         width: 100%;
         height: 100%;
         overflow: hidden;
-        border: 1px solid red;
 
         .lyric-wrapper {
           width: 80%;
           margin: 0 auto;
           overflow: hidden;
           text-align: center;
-          border: 1px solid;
 
           .text {
             line-height: 32px;
@@ -463,6 +472,12 @@ export default {
               color: $color-text;
             }
           }
+          .pure-music {
+            padding-top: 50%;
+            line-height: 32px;
+            color: $color-text-l;
+            font-size: $font-size-medium;
+          }
         }
       }
     }
@@ -471,7 +486,6 @@ export default {
       position: absolute;
       bottom: 50px;
       width: 100%;
-      border: 1px solid red;
 
       .progress-wrapper {
         display: flex;
@@ -479,7 +493,6 @@ export default {
         width: 80%;
         margin: 0 auto;
         padding: 10px 0;
-        border: 1px solid green;
 
         .time {
           color: $color-text;
@@ -487,7 +500,6 @@ export default {
           flex: 0 0 40px;
           line-height: 30px;
           width: 40px;
-          border: 1px solid;
 
           &.time-left {
             text-align: left;
@@ -500,7 +512,6 @@ export default {
 
         .progress-bar-wrapper {
           flex: 1;
-          border: 1px solid red;
         }
       }
 

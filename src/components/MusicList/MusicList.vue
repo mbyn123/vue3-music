@@ -62,6 +62,7 @@ export default {
     this.imageHeight = this.$refs.bgImageRef.clientHeight
     // 计算列表的最大滚动高度
     this.maxTranslateY = this.imageHeight - TITLE_HEIGHT
+    console.log(this.maxTranslateY, 'maxTranslateY')
   },
   computed: {
     playBtnStyle() {
