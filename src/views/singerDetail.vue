@@ -1,6 +1,6 @@
 <template>
   <div class="singer-detail">
-    <MusicList :loading="loading" :pic="pic" :song="song" :title="title" />
+    <MusicList :loading="loading" :pic="pic" :song="song" :title="title"/>
   </div>
 </template>
 

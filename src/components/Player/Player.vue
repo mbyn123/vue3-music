@@ -12,13 +12,27 @@
         <div class='sub-title'>{{ currentSong.singer }}</div>
       </div>
       <div class='middle'>
-        <div class='middle-l'>
+        <div class='middle-l' v-show='true'>
           <div class='cd-wrapper'>
             <div class='cd' ref='cdRef'>
               <img :src='currentSong.pic' alt='' ref='cdImageRef' class='image' :class='cdClass'>
             </div>
           </div>
+          <div class="playing-lyric-wrapper">
+            <div class="playing-lyric">{{ playingLyric }}</div>
+          </div>
         </div>
+        <Scroll class='middle-r' ref='lyricScrollRef' v-show='false'>
+          <div class='lyric-wrapper'>
+            <div v-if='currentLyric' ref='lyricListRef'>
+              <p class='text' :class="{'current': currentLineNum === index}" v-for='(item,index) in currentLyric.lines'
+                 :key='item.num'>{{ item.txt }}</p>
+            </div>
+            <div class="pure-music" v-show="pureMusicLyric">
+              <p>{{pureMusicLyric}}</p>
+            </div>
+          </div>
+        </Scroll>
       </div>
       <div class='bottom'>
         <div class='progress-wrapper'>
@@ -60,22 +74,38 @@ import ProgressBar from '@/components/Player/ProgressBar'
 import { formatTime } from '@/assets/js/utils'
 import { PLAY_MODE } from '@/assets/js/constant'
 import useCd from '@/components/Player/useCd'
+import useLyric from '@/components/Player/useLyric'
+import Scroll from '@/components/base/Scroll/Scroll'
 
 export default {
   name: 'Player',
   components: {
+    Scroll,
     ProgressBar
   },
   setup() {
-    const store = useStore()
-    const { modeIcon, changeMode } = useMode()
-    const { getFavoriteIcon, toggleFavorite } = useFavorite()
-    const { cdClass, cdRef, cdImageRef } = useCd()
-
     const audioRef = ref(null)
     const songReady = ref(false)
     const currentTime = ref(0)
     let progressChanging = false
+
+    const store = useStore()
+    const { modeIcon, changeMode } = useMode()
+    const { getFavoriteIcon, toggleFavorite } = useFavorite()
+    const { cdClass, cdRef, cdImageRef } = useCd()
+    const {
+      currentLyric,
+      currentLineNum,
+      lyricScrollRef,
+      lyricListRef,
+      playingLyric,
+      pureMusicLyric,
+      playLyric,
+      stopLyric
+    } = useLyric({
+      songReady,
+      currentTime
+    })
 
     const currentSong = computed(() => store.getters.currentSong)
     const fullScreen = computed(() => store.state.fullScreen)
@@ -115,7 +145,13 @@ export default {
         return
       }
       // 控制播放器播放/暂停歌曲
-      newPlaying ? audioEl.play() : audioEl.pause()
+      if (newPlaying) {
+        audioEl.play()
+        playLyric()
+      } else {
+        audioEl.pause()
+        stopLyric()
+      }
     })
 
     // 切换播放器模式
@@ -187,6 +223,7 @@ export default {
         return
       }
       songReady.value = true
+      playLyric()
     }
 
     // 播放器播放异常回调
@@ -217,9 +254,12 @@ export default {
       progressChanging = true
       // 同步播放时间的进度
       currentTime.value = currentSong.value.duration * progress
+      // 同步歌词进度
+      playLyric()
+      stopLyric()
     }
 
-    // 进度条滑动中的回调
+    // 进度条滑动完成的回调
     const changeTouchEnd = (progress) => {
       progressChanging = false
       // 同步播放时间的进度 he 播放器歌曲的播放进度
@@ -227,6 +267,7 @@ export default {
       if (!playing.value) {
         store.commit('setPlayingState', true)
       }
+      playLyric()
     }
 
     return {
@@ -241,6 +282,12 @@ export default {
       cdClass,
       cdRef,
       cdImageRef,
+      currentLyric,
+      currentLineNum,
+      lyricScrollRef,
+      lyricListRef,
+      playingLyric,
+      pureMusicLyric,
       pause,
       back,
       togglePlay,
@@ -372,6 +419,48 @@ export default {
 
             .playing {
               animation: rotate 20s linear infinite;
+            }
+          }
+        }
+
+        .playing-lyric-wrapper {
+          width: 80%;
+          margin: 30px auto 0 auto;
+          overflow: hidden;
+          text-align: center;
+          border: 1px solid;
+
+          .playing-lyric {
+            height: 20px;
+            line-height: 20px;
+            font-size: $font-size-medium;
+            color: $color-text-l;
+          }
+        }
+      }
+
+      .middle-r {
+        display: inline-block;
+        vertical-align: top;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        border: 1px solid red;
+
+        .lyric-wrapper {
+          width: 80%;
+          margin: 0 auto;
+          overflow: hidden;
+          text-align: center;
+          border: 1px solid;
+
+          .text {
+            line-height: 32px;
+            color: $color-text-l;
+            font-size: $font-size-medium;
+
+            &.current {
+              color: $color-text;
             }
           }
         }

@@ -2,6 +2,7 @@
   <Header/>
   <Tab/>
   <router-view/>
+  <!--播放器-->
   <Player/>
 </template>
 
