@@ -1,5 +1,5 @@
 <template>
-  <div class='player'>
+  <div class='player' v-show='playList.length'>
     <div class='normal-player' v-show='fullScreen'>
       <div class='background'>
         <img :src='currentSong.pic' alt=''>
@@ -71,6 +71,7 @@
       </div>
     </div>
     <audio ref='audioRef' @pause='pause' @canplay='ready' @error='error' @timeupdate='timeupdate' @ended="end"/>
+    <MinPlayer/>
   </div>
 </template>
 
@@ -86,12 +87,14 @@ import useCd from '@/components/Player/useCd'
 import useLyric from '@/components/Player/useLyric'
 import Scroll from '@/components/base/Scroll/Scroll'
 import useInteractive from '@/components/Player/useInteractive'
+import MinPlayer from '@/components/Player/MinPlayer'
 
 export default {
   name: 'Player',
   components: {
     Scroll,
-    ProgressBar
+    ProgressBar,
+    MinPlayer
   },
   setup() {
     const audioRef = ref(null)
@@ -293,6 +296,7 @@ export default {
       fullScreen,
       audioRef,
       playIcon,
+      playList,
       disableClass,
       modeIcon,
       currentTime,
