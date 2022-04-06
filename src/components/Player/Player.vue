@@ -13,7 +13,7 @@
       </div>
       <div class='middle' @touchstart.prevent='onTouchStart' @touchmove.prevent='onTouchMove' @touchend='onTouchEnd'>
         <!--旋转CD-->
-        <div class='middle-l'>
+        <div class='middle-l' :style='middleLeftStyle'>
           <div class='cd-wrapper'>
             <div class='cd' ref='cdRef'>
               <img :src='currentSong.pic' alt='' ref='cdImageRef' class='image' :class='cdClass'>
@@ -24,7 +24,7 @@
           </div>
         </div>
         <!--歌词列表-->
-        <Scroll class='middle-r' ref='lyricScrollRef'>
+        <Scroll class='middle-r' ref='lyricScrollRef' :style='middleRightStyle'>
           <div class='lyric-wrapper'>
             <div v-if='currentLyric' ref='lyricListRef'>
               <p class='text' :class="{'current': currentLineNum === index}" v-for='(item,index) in currentLyric.lines'
@@ -39,8 +39,8 @@
       <div class='bottom'>
         <!--指示点-->
         <div class="dot-wrapper">
-          <span class="dot"></span>
-          <span class="dot"></span>
+          <span class="dot" :class="{'active':currentShow==='cd'}"></span>
+          <span class="dot" :class="{'active':currentShow==='lyric'}"></span>
         </div>
         <!--进度条-->
         <div class='progress-wrapper'>
@@ -117,6 +117,9 @@ export default {
       currentTime
     })
     const {
+      currentShow,
+      middleLeftStyle,
+      middleRightStyle,
       onTouchStart,
       onTouchMove,
       onTouchEnd
@@ -303,6 +306,9 @@ export default {
       lyricListRef,
       playingLyric,
       pureMusicLyric,
+      currentShow,
+      middleLeftStyle,
+      middleRightStyle,
       pause,
       back,
       togglePlay,
@@ -400,7 +406,9 @@ export default {
       font-size: 0;
 
       .middle-l {
-        position: absolute;
+        display: inline-block;
+        vertical-align: top;
+        position: relative;
         width: 100%;
         height: 0;
         padding-top: 80%;
@@ -486,6 +494,24 @@ export default {
       position: absolute;
       bottom: 50px;
       width: 100%;
+      .dot-wrapper {
+        text-align: center;
+        font-size: 0;
+        .dot {
+          display: inline-block;
+          vertical-align: middle;
+          margin: 0 4px;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: $color-text-l;
+          &.active {
+            width: 20px;
+            border-radius: 5px;
+            background: $color-text-ll;
+          }
+        }
+      }
 
       .progress-wrapper {
         display: flex;
