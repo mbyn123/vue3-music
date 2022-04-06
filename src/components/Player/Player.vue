@@ -71,7 +71,7 @@
       </div>
     </div>
     <audio ref='audioRef' @pause='pause' @canplay='ready' @error='error' @timeupdate='timeupdate' @ended="end"/>
-    <MinPlayer/>
+    <MinPlayer :progress='progress' :togglePlay='togglePlay'/>
   </div>
 </template>
 

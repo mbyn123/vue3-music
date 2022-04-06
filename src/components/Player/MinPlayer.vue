@@ -6,9 +6,14 @@
           <img :src='currentSong.pic' width='40' height='40' alt='' :class='cdClass' ref='cdImageRef'>
         </div>
       </div>
-      <div>
+      <div class='slider-wrapper'>
         <h2 class='name'>{{ currentSong.name }}</h2>
         <div class='desc'>{{ currentSong.singer }}</div>
+      </div>
+      <div class='control'>
+        <ProgressCircle :progress='progress'>
+          <i class='icon-mini' :class='miniPlayIcon' @click.stop='togglePlay'/>
+        </ProgressCircle>
       </div>
     </div>
   </transition>
@@ -18,13 +23,26 @@
 import { useStore } from 'vuex'
 import { computed } from 'vue'
 import useCd from '@/components/Player/useCd'
+import ProgressCircle from '@/components/Player/ProgressCircle'
 
 export default {
   name: 'MinPlayer',
+  props: {
+    progress: {
+      type: Number,
+      default: 0
+    },
+    togglePlay: Function
+  },
+  components: {
+    ProgressCircle
+  },
   setup() {
     const store = useStore()
     const fullScreen = computed(() => store.state.fullScreen)
     const currentSong = computed(() => store.getters.currentSong)
+    const playing = computed(() => store.state.playing)
+    const miniPlayIcon = computed(() => playing.value ? 'icon-pause-mini' : 'icon-play-mini')
     const { cdClass, cdRef, cdImageRef } = useCd()
     const showNormalPlayer = () => store.commit('setFullScreen', true)
     return {
@@ -33,6 +51,7 @@ export default {
       cdClass,
       cdRef,
       cdImageRef,
+      miniPlayIcon,
       showNormalPlayer
     }
   }
@@ -68,6 +87,38 @@ export default {
           animation: rotate 20s linear infinite;
         }
       }
+    }
+  }
+
+  .slider-wrapper {
+    border: 1px solid;
+
+    .name {
+      margin-bottom: 2px;
+      @include no-wrap();
+      font-size: $font-size-medium;
+      color: $color-text;
+    }
+
+    .desc {
+      @include no-wrap();
+      font-size: $font-size-small;
+      color: $color-text-d;
+    }
+  }
+
+  .control {
+    flex: 0 0 30px;
+    width: 30px;
+    border: 1px solid;
+    padding: 0 10px;
+
+    .icon-mini {
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: $color-theme-d;
+      font-size: 32px;
     }
   }
 
