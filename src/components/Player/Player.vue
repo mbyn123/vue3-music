@@ -46,7 +46,8 @@
         <div class='progress-wrapper'>
           <span class='time time-left'>{{ formatTime(currentTime) }}</span>
           <div class='progress-bar-wrapper'>
-            <ProgressBar :progress='progress' @changeTouchMove='changeTouchMove' @changeTouchEnd='changeTouchEnd'/>
+            <ProgressBar :progress='progress' @changeTouchMove='changeTouchMove' @changeTouchEnd='changeTouchEnd'
+                         ref='barRef'/>
           </div>
           <span class='time time-right'>{{ formatTime(currentSong.duration) }}</span>
         </div>
@@ -77,7 +78,7 @@
 
 <script>
 import { useStore } from 'vuex'
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import useMode from '@/components/Player/useMode'
 import useFavorite from '@/components/Player/useFavorite'
 import ProgressBar from '@/components/Player/ProgressBar'
@@ -100,6 +101,7 @@ export default {
     const audioRef = ref(null)
     const songReady = ref(false)
     const currentTime = ref(0)
+    const barRef = ref(null)
     let progressChanging = false
 
     const store = useStore()
@@ -172,6 +174,14 @@ export default {
       } else {
         audioEl.pause()
         stopLyric()
+      }
+    })
+
+    // 监听播放器为全屏状态时,同步进度条进度
+    watch(fullScreen, async (newValue) => {
+      if (newValue) {
+        await nextTick()
+        barRef.value.setProgress(progress.value)
       }
     })
 
@@ -313,6 +323,7 @@ export default {
       currentShow,
       middleLeftStyle,
       middleRightStyle,
+      barRef,
       pause,
       back,
       togglePlay,
@@ -484,6 +495,7 @@ export default {
               color: $color-text;
             }
           }
+
           .pure-music {
             padding-top: 50%;
             line-height: 32px;
@@ -498,9 +510,11 @@ export default {
       position: absolute;
       bottom: 50px;
       width: 100%;
+
       .dot-wrapper {
         text-align: center;
         font-size: 0;
+
         .dot {
           display: inline-block;
           vertical-align: middle;
@@ -509,6 +523,7 @@ export default {
           height: 8px;
           border-radius: 50%;
           background: $color-text-l;
+
           &.active {
             width: 20px;
             border-radius: 5px;
