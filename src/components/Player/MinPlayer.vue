@@ -6,14 +6,21 @@
           <img :src='currentSong.pic' width='40' height='40' alt='' :class='cdClass' ref='cdImageRef'>
         </div>
       </div>
-      <div class='slider-wrapper'>
-        <h2 class='name'>{{ currentSong.name }}</h2>
-        <div class='desc'>{{ currentSong.singer }}</div>
+      <div class='slider-wrapper' ref='sliderWrapperRef'>
+        <div class='slide-group'>
+          <div class='slide-page' v-for='item in playList' :key='item.id'>
+            <h2 class='name'>{{ item.name }}</h2>
+            <div class='desc'>{{ item.singer }}</div>
+          </div>
+        </div>
       </div>
       <div class='control'>
         <ProgressCircle :progress='progress'>
           <i class='icon-mini' :class='miniPlayIcon' @click.stop='togglePlay'/>
         </ProgressCircle>
+      </div>
+      <div class='control'>
+        <i class='icon-playlist'></i>
       </div>
     </div>
   </transition>
@@ -24,6 +31,7 @@ import { useStore } from 'vuex'
 import { computed } from 'vue'
 import useCd from '@/components/Player/useCd'
 import ProgressCircle from '@/components/Player/ProgressCircle'
+import useMinSlider from '@/components/Player/useMinSlider'
 
 export default {
   name: 'MinPlayer',
@@ -42,9 +50,11 @@ export default {
     const fullScreen = computed(() => store.state.fullScreen)
     const currentSong = computed(() => store.getters.currentSong)
     const playing = computed(() => store.state.playing)
+    const playList = computed(() => store.state.playList)
     const miniPlayIcon = computed(() => playing.value ? 'icon-pause-mini' : 'icon-play-mini')
     const { cdClass, cdRef, cdImageRef } = useCd()
     const showNormalPlayer = () => store.commit('setFullScreen', true)
+    const { sliderWrapperRef } = useMinSlider()
     return {
       fullScreen,
       currentSong,
@@ -52,6 +62,8 @@ export default {
       cdRef,
       cdImageRef,
       miniPlayIcon,
+      playList,
+      sliderWrapperRef,
       showNormalPlayer
     }
   }
@@ -91,27 +103,50 @@ export default {
   }
 
   .slider-wrapper {
-    border: 1px solid;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 20px;
+    overflow: hidden;
+    flex: 1;
 
-    .name {
-      margin-bottom: 2px;
-      @include no-wrap();
-      font-size: $font-size-medium;
-      color: $color-text;
-    }
+    .slide-group {
+      overflow: hidden;
+      white-space: nowrap;
 
-    .desc {
-      @include no-wrap();
-      font-size: $font-size-small;
-      color: $color-text-d;
+      .slide-page {
+        display: inline-block;
+        width: 100%;
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+
+        .name {
+          margin-bottom: 2px;
+          @include no-wrap();
+          font-size: $font-size-medium;
+          color: $color-text;
+        }
+
+        .desc {
+          @include no-wrap();
+          font-size: $font-size-small;
+          color: $color-text-d;
+        }
+      }
     }
   }
 
   .control {
     flex: 0 0 30px;
     width: 30px;
-    border: 1px solid;
     padding: 0 10px;
+
+    .icon-playlist {
+      position: relative;
+      top: -2px;
+      font-size: 28px;
+      color: $color-theme-d;
+    }
 
     .icon-mini {
       position: absolute;

@@ -25,7 +25,7 @@ export default function useSlider(wrapperRef) {
     })
   })
 
-  // 卸载轮播实例
+  // 页面卸载时同时卸载轮播实例
   onUnmounted(() => {
     slider.value.destroy()
   })

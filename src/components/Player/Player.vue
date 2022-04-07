@@ -77,17 +77,17 @@
 </template>
 
 <script>
-import { useStore } from 'vuex'
 import { computed, nextTick, ref, watch } from 'vue'
+import { useStore } from 'vuex'
 import useMode from '@/components/Player/useMode'
 import useFavorite from '@/components/Player/useFavorite'
-import ProgressBar from '@/components/Player/ProgressBar'
-import { formatTime } from '@/assets/js/utils'
-import { PLAY_MODE } from '@/assets/js/constant'
 import useCd from '@/components/Player/useCd'
 import useLyric from '@/components/Player/useLyric'
-import Scroll from '@/components/base/Scroll/Scroll'
 import useInteractive from '@/components/Player/useInteractive'
+import { formatTime } from '@/assets/js/utils'
+import { PLAY_MODE } from '@/assets/js/constant'
+import ProgressBar from '@/components/Player/ProgressBar'
+import Scroll from '@/components/base/Scroll/Scroll'
 import MinPlayer from '@/components/Player/MinPlayer'
 
 export default {
@@ -121,6 +121,7 @@ export default {
       songReady,
       currentTime
     })
+
     const {
       currentShow,
       middleLeftStyle,
