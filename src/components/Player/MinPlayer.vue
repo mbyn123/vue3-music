@@ -19,19 +19,21 @@
           <i class='icon-mini' :class='miniPlayIcon' @click.stop='togglePlay'/>
         </ProgressCircle>
       </div>
-      <div class='control'>
+      <div class='control' @click.stop='clickShowPlayList'>
         <i class='icon-playlist'></i>
       </div>
+      <PlayList ref='playlistRef'/>
     </div>
   </transition>
 </template>
 
 <script>
 import { useStore } from 'vuex'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import useCd from '@/components/Player/useCd'
 import ProgressCircle from '@/components/Player/ProgressCircle'
 import useMinSlider from '@/components/Player/useMinSlider'
+import PlayList from '@/components/Player/PlayList'
 
 export default {
   name: 'MinPlayer',
@@ -43,7 +45,8 @@ export default {
     togglePlay: Function
   },
   components: {
-    ProgressCircle
+    ProgressCircle,
+    PlayList
   },
   setup() {
     const store = useStore()
@@ -53,8 +56,18 @@ export default {
     const playList = computed(() => store.state.playList)
     const miniPlayIcon = computed(() => playing.value ? 'icon-pause-mini' : 'icon-play-mini')
     const { cdClass, cdRef, cdImageRef } = useCd()
-    const showNormalPlayer = () => store.commit('setFullScreen', true)
     const { sliderWrapperRef } = useMinSlider()
+    const playlistRef = ref(null)
+
+    // 切换成全屏
+    const showNormalPlayer = () => store.commit('setFullScreen', true)
+
+    // 打开播放列表
+    const clickShowPlayList = () => {
+      console.log(11111, playlistRef.value)
+      playlistRef.value.show()
+    }
+
     return {
       fullScreen,
       currentSong,
@@ -64,7 +77,9 @@ export default {
       miniPlayIcon,
       playList,
       sliderWrapperRef,
-      showNormalPlayer
+      playlistRef,
+      showNormalPlayer,
+      clickShowPlayList
     }
   }
 }

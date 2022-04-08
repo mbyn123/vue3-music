@@ -87,12 +87,12 @@ import useFavorite from '@/components/Player/useFavorite'
 import useCd from '@/components/Player/useCd'
 import useLyric from '@/components/Player/useLyric'
 import useInteractive from '@/components/Player/useInteractive'
+import useAnimation from '@/components/Player/useAnimation'
 import { formatTime } from '@/assets/js/utils'
 import { PLAY_MODE } from '@/assets/js/constant'
 import ProgressBar from '@/components/Player/ProgressBar'
 import Scroll from '@/components/base/Scroll/Scroll'
 import MinPlayer from '@/components/Player/MinPlayer'
-import useAnimation from '@/components/Player/useAnimation'
 
 export default {
   name: 'Player',

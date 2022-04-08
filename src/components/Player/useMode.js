@@ -7,8 +7,11 @@ export default function useMode() {
   const playMode = computed(() => state.playMode)
   const modeIcon = computed(() => {
     const playModeVal = playMode.value
-    console.log(playModeVal, 'playModeVal')
     return playModeVal === PLAY_MODE.sequence ? 'icon-sequence' : playModeVal === PLAY_MODE.random ? 'icon-random' : 'icon-loop'
+  })
+  const modeText = computed(() => {
+    const playModeVal = playMode.value
+    return playModeVal === PLAY_MODE.sequence ? '顺序播放' : playModeVal === PLAY_MODE.random ? '随机播放' : '单曲循环'
   })
   const changeMode = () => {
     // 切换播放模式 ，%3 确保只会在 0 1 2中切换
@@ -17,6 +20,7 @@ export default function useMode() {
   }
   return {
     modeIcon,
+    modeText,
     changeMode
   }
 }

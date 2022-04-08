@@ -7,6 +7,7 @@ export default function useFavorite() {
   const { state, commit } = useStore()
   const favoriteList = computed(() => state.favoriteList)
   const maxLength = 100
+  // 获取收藏图标
   const getFavoriteIcon = (song) => {
     return isFavorite(song) ? 'icon-favorite' : 'icon-not-favorite'
   }
