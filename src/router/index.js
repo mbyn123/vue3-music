@@ -5,13 +5,20 @@ const Singer = () => import('@/views/singer.vue')
 const TopList = () => import('@/views/topList.vue')
 const Search = () => import('@/views/search.vue')
 const SingerDetail = () => import('@/views/singerDetail.vue')
+const Album = () => import('@/views/album.vue')
 
 const routes = [{
   path: '/',
   redirect: '/recommend'
 }, {
   path: '/recommend',
-  component: Recommend
+  component: Recommend,
+  children: [
+    {
+      path: ':id',
+      component: Album
+    }
+  ]
 }, {
   path: '/singer',
   component: Singer,

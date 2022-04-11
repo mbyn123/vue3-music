@@ -1,19 +1,19 @@
 <template>
-  <div class="singer-detail">
+  <div class='album-wrapper'>
     <MusicList :loading="loading" :pic="pic" :song="song" :title="title"/>
   </div>
 </template>
 
 <script>
-import { getSingerDetail } from '@/service/singer'
-import { SINGER_KEY } from '@/assets/js/constant'
 import createComponent from '@/assets/js/createComponent'
+import { getAlbum } from '@/service/recommend'
+import { ALBUM_KEY } from '@/assets/js/constant'
 
-export default createComponent('singerDetail', SINGER_KEY, getSingerDetail)
+export default createComponent('album', ALBUM_KEY, getAlbum)
 </script>
 
 <style lang="scss" scoped>
-.singer-detail {
+.album-wrapper {
   position: fixed;
   top: 0;
   left: 0;
