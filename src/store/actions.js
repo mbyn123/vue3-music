@@ -64,6 +64,14 @@ export const deleteSong = ({ commit, state }, song) => {
   }
 }
 
+// 清空播放列表
+export const clearPlayList = ({ commit, state }) => {
+  commit('setPlayList', [])
+  commit('setSequenceList', [])
+  commit('setCurrentIndex', 0)
+  commit('setPlayingState', false)
+}
+
 const findIndex = (list, song) => {
   return list.findIndex(item => item.id === song.id)
 }

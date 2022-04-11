@@ -7,9 +7,7 @@
             <h1 class='title'>
               <i class='icon' :class='modeIcon' @click='changeMode'></i>
               <span class='text'>{{ modeText }}</span>
-              <span class='clear'>
-           <i class='icon-clear'></i>
-         </span>
+              <span class='clear' @click='clearSong'><i class='icon-clear'/></span>
             </h1>
           </div>
           <Scroll ref='scrollRef' class='list-content'>
@@ -18,7 +16,8 @@
                 <i class='current' :class='getCurrentIcon(item)'></i>
                 <span class='text'>{{ item.name }}</span>
                 <span class='favorite' @click.stop='toggleFavorite(item)'><i :class='getFavoriteIcon(item)'/> </span>
-                <span class='delete' :class='{"disable":removing}' @click.stop='removeSong(item)'> <i class='icon-delete'/> </span>
+                <span class='delete' :class='{"disable":removing}' @click.stop='removeSong(item)'> <i
+                  class='icon-delete'/> </span>
               </li>
             </transition-group>
           </Scroll>
@@ -33,6 +32,7 @@
             <span>关闭</span>
           </div>
         </div>
+        <Confirm ref='confirmRef' text='是否清空播放列表?' confirm-text='清空' @confirm='confirm'/>
       </div>
     </transition>
   </teleport>
@@ -45,11 +45,13 @@ import { computed, nextTick, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import useFavorite from '@/components/Player/useFavorite'
 import Scroll from '@/components/base/Scroll/Scroll'
+import Confirm from '@/components/base/Confirm/Confirm'
 
 export default {
   name: 'PlayList',
   components: {
-    Scroll
+    Scroll,
+    Confirm
   },
   setup() {
     const store = useStore()
@@ -57,6 +59,7 @@ export default {
     const scrollRef = ref(null)
     const listRef = ref(null)
     const removing = ref(false)
+    const confirmRef = ref(false)
     const playlist = computed(() => store.state.playList)
     const sequenceList = computed(() => store.state.sequenceList)
     const currentSong = computed(() => store.getters.currentSong)
@@ -92,6 +95,7 @@ export default {
       visible.value = false
     }
 
+    // 播放歌曲
     const selectSong = (song) => {
       const index = store.state.playList.findIndex(item => item.id === song.id)
       store.commit('setCurrentIndex', index)
@@ -117,6 +121,16 @@ export default {
       }, 300)
     }
 
+    // 清空列表
+    const clearSong = () => {
+      confirmRef.value.show()
+    }
+
+    const confirm = () => {
+      hide()
+      store.dispatch('clearPlayList')
+    }
+
     return {
       visible,
       playlist,
@@ -127,6 +141,9 @@ export default {
       scrollRef,
       listRef,
       removing,
+      confirmRef,
+      confirm,
+      clearSong,
       selectSong,
       getFavoriteIcon,
       toggleFavorite,
