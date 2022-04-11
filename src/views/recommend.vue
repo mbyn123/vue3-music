@@ -29,10 +29,10 @@
 <script>
 import { getRecommend } from '@/service/recommend.js'
 import Slider from '@/components/base/Slider/Slider'
-import Scroll from '@/components/base/Scroll/Scroll'
+import Scroll from '@/components/WrapperScroll'
 
 export default {
-  data () {
+  data() {
     return {
       sliders: [],
       albums: [],
@@ -44,11 +44,11 @@ export default {
     Scroll
   },
   computed: {
-    loading () {
+    loading() {
       return !this.sliders.length && !this.albums.length
     }
   },
-  async mounted () {
+  async mounted() {
     const res = await getRecommend()
     this.sliders = res.sliders
     this.albums = res.albums

@@ -25,9 +25,9 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import SongList from '@/components/base/SongList/SongList'
-import Scroll from '@/components/base/Scroll/Scroll'
+import Scroll from '@/components/WrapperScroll'
 
 const TITLE_HEIGHT = 40
 export default {
@@ -65,6 +65,7 @@ export default {
     console.log(this.maxTranslateY, 'maxTranslateY')
   },
   computed: {
+    ...mapState(['playList']),
     playBtnStyle() {
       let display = ''
       if (this.scrollY >= this.maxTranslateY) {
@@ -105,7 +106,8 @@ export default {
     },
     scrollStyle() {
       return {
-        top: `${this.imageHeight}px`
+        top: `${this.imageHeight}px`,
+        bottom: this.playList.length ? '60px' : '0'
       }
     },
     filterStyle() {
