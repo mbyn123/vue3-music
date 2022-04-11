@@ -13,18 +13,14 @@
             </h1>
           </div>
           <Scroll ref='scrollRef' class='list-content'>
-            <ul>
-              <li class='item' v-for='item in sequenceList' :key='item.id'>
+            <transition-group name='list' ref='listRef' tag='ul'>
+              <li class='item' v-for='item in sequenceList' :key='item.id' @click='selectSong(item)'>
                 <i class='current' :class='getCurrentIcon(item)'></i>
                 <span class='text'>{{ item.name }}</span>
-                <span class='favorite' @click='toggleFavorite(item)'>
-                <i :class='getFavoriteIcon(item)'/>
-              </span>
-                <span class='delete'>
-                <i class='icon-delete'/>
-              </span>
+                <span class='favorite' @click.stop='toggleFavorite(item)'><i :class='getFavoriteIcon(item)'/> </span>
+                <span class='delete' :class='{"disable":removing}' @click.stop='removeSong(item)'> <i class='icon-delete'/> </span>
               </li>
-            </ul>
+            </transition-group>
           </Scroll>
           <div class='list-add'>
             <div class='add'>
@@ -45,7 +41,7 @@
 
 <script>
 import useMode from '@/components/Player/useMode'
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import useFavorite from '@/components/Player/useFavorite'
 import Scroll from '@/components/base/Scroll/Scroll'
@@ -59,9 +55,20 @@ export default {
     const store = useStore()
     const visible = ref(false)
     const scrollRef = ref(null)
+    const listRef = ref(null)
+    const removing = ref(false)
     const playlist = computed(() => store.state.playList)
     const sequenceList = computed(() => store.state.sequenceList)
     const currentSong = computed(() => store.getters.currentSong)
+
+    watch(currentSong, async () => {
+      if (!visible.value) {
+        return
+      }
+      await nextTick()
+      scrollToCurrent()
+    })
+
     // 播放模式
     const { modeIcon, modeText, changeMode } = useMode()
     // 收藏状态
@@ -78,10 +85,36 @@ export default {
       await nextTick()
       // 刷新scroll组件
       scrollRef.value.scroll.refresh()
+      scrollToCurrent()
     }
 
     const hide = () => {
       visible.value = false
+    }
+
+    const selectSong = (song) => {
+      const index = store.state.playList.findIndex(item => item.id === song.id)
+      store.commit('setCurrentIndex', index)
+      store.commit('setPlayingState', true)
+    }
+
+    // 滚动到当前播放歌曲的位置
+    const scrollToCurrent = () => {
+      const index = sequenceList.value.findIndex(item => item.id === currentSong.value.id)
+      const target = listRef.value.$el.children[index]
+      scrollRef.value.scroll.scrollToElement(target, 300)
+    }
+
+    // 删除歌曲
+    const removeSong = (song) => {
+      if (removing.value) {
+        return
+      }
+      removing.value = true
+      store.dispatch('deleteSong', song)
+      setTimeout(() => {
+        removing.value = false
+      }, 300)
     }
 
     return {
@@ -92,12 +125,16 @@ export default {
       modeText,
       currentSong,
       scrollRef,
+      listRef,
+      removing,
+      selectSong,
       getFavoriteIcon,
       toggleFavorite,
       changeMode,
       show,
       hide,
-      getCurrentIcon
+      getCurrentIcon,
+      removeSong
     }
   }
 }

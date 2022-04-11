@@ -204,7 +204,6 @@ export default {
 
     // 下一首
     const next = () => {
-      let index = currentIndex.value + 1
       const list = playList.value
       if (!list.length || !songReady.value) {
         return
@@ -212,6 +211,7 @@ export default {
       if (list.length === 1) {
         return loop()
       }
+      let index = currentIndex.value + 1
       // 如果只有一首歌就重复播放当前这首歌
       if (index === list.length) {
         index = 0
@@ -224,7 +224,6 @@ export default {
 
     // 上一首
     const previous = () => {
-      let index = currentIndex.value - 1
       const list = playList.value
       if (!list.length || !songReady.value) {
         return
@@ -232,6 +231,7 @@ export default {
       if (list.length === 1) {
         return loop()
       }
+      let index = currentIndex.value - 1
       if (index === -1) {
         index = list.length - 1
       }

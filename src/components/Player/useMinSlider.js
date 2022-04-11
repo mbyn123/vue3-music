@@ -18,7 +18,7 @@ export default function useMinSlider() {
   onMounted(() => {
     let sliderVal
     watch(sliderShow, async (newValue) => {
-      if (newValue) {
+      if (!newValue) {
         return
       }
       // 在组件DOM更新后获取到sliderWrapperRef Dom节点
@@ -53,6 +53,12 @@ export default function useMinSlider() {
     watch(currentIndex, (newIndex) => {
       if (sliderVal && sliderShow.value) {
         sliderVal.goToPage(newIndex, 0, 0)
+      }
+    })
+    watch(playList, async () => {
+      if (sliderVal && sliderShow.value) {
+        await nextTick()
+        sliderVal.refresh()
       }
     })
   })
