@@ -6,6 +6,7 @@ const TopList = () => import('@/views/topList.vue')
 const Search = () => import('@/views/search.vue')
 const SingerDetail = () => import('@/views/singerDetail.vue')
 const Album = () => import('@/views/album.vue')
+const TopListDetail = () => import('@/views/topListDetail.vue')
 
 const routes = [{
   path: '/',
@@ -30,7 +31,13 @@ const routes = [{
   ]
 }, {
   path: '/topList',
-  component: TopList
+  component: TopList,
+  children: [
+    {
+      path: ':id',
+      component: TopListDetail
+    }
+  ]
 }, {
   path: '/search',
   component: Search

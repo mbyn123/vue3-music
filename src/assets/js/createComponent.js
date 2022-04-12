@@ -23,6 +23,7 @@ export default function createComponent(name, key, fetch) {
         return
       }
       const res = await fetch(data)
+      // 获取歌曲的播放地址
       this.song = await processSongs(res.songs)
       this.loading = false
     },
@@ -30,13 +31,15 @@ export default function createComponent(name, key, fetch) {
       MusicList
     },
     computed: {
-      // 页面刷新从缓存中获取数据
+      // 页面刷新
       computedData() {
         let rel = null
+        // 从props中获取数据
         const data = this.data
         if (JSON.stringify(data) !== '{}') {
           rel = data
         } else {
+          // 从本地缓存中获取数据
           const cached = storage.session.get(key)
           if (cached && (cached.mid || cached.id + '') === this.$route.params.id) {
             rel = cached

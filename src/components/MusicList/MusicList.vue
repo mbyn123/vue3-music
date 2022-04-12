@@ -18,7 +18,7 @@
     <Scroll v-loading="loading" v-noResult:[noResultText]="noResult" :probe-type="3" :style="scrollStyle" class="list"
             @scroll="scroll">
       <div class="song-list-wrapper">
-        <SongList :songs="song" @select='selectItem'/>
+        <SongList :songs="song" @select='selectItem' rank/>
       </div>
     </Scroll>
   </div>
@@ -45,7 +45,8 @@ export default {
     noResultText: {
       type: String,
       default: '抱歉，没有找到可播放的歌曲'
-    }
+    },
+    rank: Boolean
   },
   data() {
     return {
