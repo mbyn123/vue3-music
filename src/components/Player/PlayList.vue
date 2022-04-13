@@ -22,7 +22,7 @@
             </transition-group>
           </Scroll>
           <div class='list-add'>
-            <div class='add'>
+            <div class='add' @click='openAddSong'>
               <i class='icon-add'>
                 <span class='text'>添加歌曲到队列</span>
               </i>
@@ -33,6 +33,7 @@
           </div>
         </div>
         <Confirm ref='confirmRef' text='是否清空播放列表?' confirm-text='清空' @confirm='confirm'/>
+        <AddSong ref='addSongRef'/>
       </div>
     </transition>
   </teleport>
@@ -46,12 +47,14 @@ import { useStore } from 'vuex'
 import useFavorite from '@/components/Player/useFavorite'
 import Scroll from '@/components/base/Scroll/Scroll'
 import Confirm from '@/components/base/Confirm/Confirm'
+import AddSong from '@/components/AddSong/AddSong'
 
 export default {
   name: 'PlayList',
   components: {
     Scroll,
-    Confirm
+    Confirm,
+    AddSong
   },
   setup() {
     const store = useStore()
@@ -60,6 +63,8 @@ export default {
     const listRef = ref(null)
     const removing = ref(false)
     const confirmRef = ref(false)
+    const addSongRef = ref(null)
+
     const playlist = computed(() => store.state.playList)
     const sequenceList = computed(() => store.state.sequenceList)
     const currentSong = computed(() => store.getters.currentSong)
@@ -131,6 +136,10 @@ export default {
       store.dispatch('clearPlayList')
     }
 
+    const openAddSong = () => {
+      addSongRef.value.show()
+    }
+
     return {
       visible,
       playlist,
@@ -142,6 +151,7 @@ export default {
       listRef,
       removing,
       confirmRef,
+      addSongRef,
       confirm,
       clearSong,
       selectSong,
@@ -151,7 +161,8 @@ export default {
       show,
       hide,
       getCurrentIcon,
-      removeSong
+      removeSong,
+      openAddSong
     }
   }
 }

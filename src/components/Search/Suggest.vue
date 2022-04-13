@@ -34,7 +34,7 @@ export default {
   name: 'Suggest',
   props: {
     query: String,
-    showSinger: {
+    showSinger: { // 是否搜索歌手
       type: Boolean,
       default: true
     }
@@ -68,6 +68,7 @@ export default {
       await searchFirst()
     })
 
+    // 发送搜索请求
     const searchFirst = async () => {
       if (!props.query) {
         return

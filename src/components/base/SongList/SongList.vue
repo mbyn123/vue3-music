@@ -31,7 +31,6 @@ export default {
       return `${song.singer}·${song.album}`
     },
     clickItem(item, index) {
-      console.log('iii')
       this.$emit('select', { item, index })
     },
     getRankText(index) {
