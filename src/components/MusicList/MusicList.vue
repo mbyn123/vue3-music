@@ -18,7 +18,7 @@
     <Scroll v-loading="loading" v-noResult:[noResultText]="noResult" :probe-type="3" :style="scrollStyle" class="list"
             @scroll="scroll">
       <div class="song-list-wrapper">
-        <SongList :songs="song" @select='selectItem' rank/>
+        <SongList :songs="song" @select='selectItem' :rank='rank'/>
       </div>
     </Scroll>
   </div>

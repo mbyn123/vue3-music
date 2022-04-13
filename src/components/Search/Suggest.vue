@@ -1,5 +1,5 @@
 <template>
-  <div class='suggest' v-loading:[loadingText]='loading' v-noResult:[noResultText]='noResult'>
+  <div class='suggest' ref='rootRef' v-loading:[loadingText]='loading' v-noResult:[noResultText]='noResult'>
     <ul class='suggest-list'>
       <li class='suggest-item' v-if='singer'>
         <div class='icon'>
@@ -17,14 +17,16 @@
           <p class='text'>{{ item.singer }} -- {{ item.name }}</p>
         </div>
       </li>
+      <div class='suggest-item' v-loading:[loadingText]='pullUpLoading'></div>
     </ul>
   </div>
 </template>
 
 <script>
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { search } from '@/service/search'
 import { processSongs } from '@/service/song'
+import usePullUpLoad from '@/components/Search/usePullUpLoad'
 
 export default {
   name: 'Suggest',
@@ -42,10 +44,19 @@ export default {
     const page = ref(1)
     const loadingText = ref('')
     const noResultText = ref('抱歉，暂无搜索结果')
+    const manualLoading = ref(false)
 
     const loading = computed(() => !singer.value && !songs.value.length)
 
     const noResult = computed(() => !singer.value && !songs.value.length && !hasMore.value)
+
+    const pullUpLoading = computed(() => isPullUpLoad.value && hasMore.value)
+
+    const preventPullUpLoad = computed(() => {
+      return loading.value || manualLoading.value
+    })
+
+    const { rootRef, isPullUpLoad, scroll } = usePullUpLoad(searchMore, preventPullUpLoad)
 
     watch(() => props.query, async (newQuery) => {
       if (!newQuery) {
@@ -68,6 +79,29 @@ export default {
       songs.value = await processSongs(res.songs.filter(i => i.mid))
       singer.value = res.singer
       hasMore.value = res.hasMore
+      await nextTick()
+      await makeItScrollable()
+    }
+
+    // 上拉加载
+    async function searchMore() {
+      if (!props.query || !hasMore.value) {
+        return
+      }
+      page.value++
+      const res = await search(props.query, page.value, props.showSinger)
+      songs.value = songs.value.concat(res.songs)
+      hasMore.value = res.hasMore
+      await nextTick()
+      await makeItScrollable()
+    }
+
+    async function makeItScrollable() {
+      if (scroll.value.maxScrollY >= -1) {
+        manualLoading.value = true
+        await searchMore()
+        manualLoading.value = false
+      }
     }
 
     return {
@@ -76,7 +110,9 @@ export default {
       loading,
       loadingText,
       noResult,
-      noResultText
+      noResultText,
+      rootRef,
+      pullUpLoading
     }
   }
 }

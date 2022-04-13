@@ -23,10 +23,7 @@ export default {
       }
     },
     rank: {
-      type: Boolean,
-      default() {
-        return false
-      }
+      type: Boolean
     }
   },
   methods: {
