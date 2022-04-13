@@ -64,7 +64,6 @@ export default {
 
     // 打开播放列表
     const clickShowPlayList = () => {
-      console.log(11111, playlistRef.value)
       playlistRef.value.show()
     }
 

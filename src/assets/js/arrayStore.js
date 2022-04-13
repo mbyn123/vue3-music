@@ -21,10 +21,20 @@ export const remove = (key, compare) => {
   return items
 }
 
+// 清空
+export const clear = (key) => {
+  storage.remove(key)
+  return []
+}
+
 // 存储时
 const insertArray = (arr, val, compare, maxLength) => {
   // 获取当前操作数据的索引
   const index = arr.findIndex(compare)
+  console.log(index, 'text')
+  if (index === 0) {
+    return
+  }
   // 如果存在就删除
   if (index > 0) {
     arr.splice(index, 1)

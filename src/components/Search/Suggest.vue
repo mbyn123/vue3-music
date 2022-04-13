@@ -1,7 +1,8 @@
 <template>
   <div class='suggest' ref='rootRef' v-loading:[loadingText]='loading' v-noResult:[noResultText]='noResult'>
     <ul class='suggest-list'>
-      <li class='suggest-item' v-if='singer'>
+      <!--歌手-->
+      <li class='suggest-item' v-if='singer' @click='selectSinger(singer)'>
         <div class='icon'>
           <i class='icon-mine'></i>
         </div>
@@ -9,7 +10,8 @@
           <p class='text'>{{ singer.name }}</p>
         </div>
       </li>
-      <li class='suggest-item' v-for='item in songs' :key='item.id'>
+      <!--歌曲-->
+      <li class='suggest-item' v-for='item in songs' :key='item.id' @click='selectSong(item)'>
         <div class='icon'>
           <i class='icon-music'></i>
         </div>
@@ -17,7 +19,7 @@
           <p class='text'>{{ item.singer }} -- {{ item.name }}</p>
         </div>
       </li>
-      <div class='suggest-item' v-loading:[loadingText]='pullUpLoading'></div>
+      <li class='suggest-item' v-loading:[loadingText]='pullUpLoading'/>
     </ul>
   </div>
 </template>
@@ -37,7 +39,8 @@ export default {
       default: true
     }
   },
-  setup(props) {
+  emits: ['emit'],
+  setup(props, { emit }) {
     const singer = ref(null)
     const songs = ref([])
     const hasMore = ref(true)
@@ -104,6 +107,14 @@ export default {
       }
     }
 
+    const selectSong = (value) => {
+      emit('selectSong', value)
+    }
+
+    const selectSinger = (value) => {
+      emit('selectSinger', value)
+    }
+
     return {
       singer,
       songs,
@@ -112,7 +123,9 @@ export default {
       noResult,
       noResultText,
       rootRef,
-      pullUpLoading
+      pullUpLoading,
+      selectSong,
+      selectSinger
     }
   }
 }

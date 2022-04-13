@@ -65,11 +65,39 @@ export const deleteSong = ({ commit, state }, song) => {
 }
 
 // 清空播放列表
-export const clearPlayList = ({ commit, state }) => {
+export const clearPlayList = ({ commit }) => {
   commit('setPlayList', [])
   commit('setSequenceList', [])
   commit('setCurrentIndex', 0)
   commit('setPlayingState', false)
+}
+
+// 添加歌曲到播放列表
+export const addSong = ({ commit, state }, song) => {
+  const playList = state.playList.slice()
+  const sequenceList = state.sequenceList.slice()
+  let currentIndex = state.currentIndex
+
+  // 当前添加的歌曲是否存在播放列表中
+  const playIndex = findIndex(playList, song)
+  if (playIndex > -1) { // 存在
+    currentIndex = playIndex
+  } else { // 不存在
+    playList.push(song)
+    currentIndex = playList.length - 1
+  }
+
+  // 当前添加的歌曲是否存在歌曲列表中
+  const sequenceIndex = findIndex(sequenceList, song)
+  if (sequenceIndex === -1) { // 不存在
+    sequenceList.push(song)
+  }
+
+  commit('setPlayList', playList)
+  commit('setSequenceList', sequenceList)
+  commit('setCurrentIndex', currentIndex)
+  commit('setPlayingState', true)
+  commit('setFullScreen', true)
 }
 
 const findIndex = (list, song) => {

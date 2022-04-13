@@ -36,7 +36,7 @@ export default function createComponent(name, key, fetch) {
         let rel = null
         // 从props中获取数据
         const data = this.data
-        if (JSON.stringify(data) !== '{}') {
+        if (data) {
           rel = data
         } else {
           // 从本地缓存中获取数据

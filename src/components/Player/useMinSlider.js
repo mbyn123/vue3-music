@@ -41,7 +41,6 @@ export default function useMinSlider() {
         // 改变当前播放歌曲
         sliderVal.on('slidePageChanged', ({ pageX }) => {
           store.commit('setCurrentIndex', pageX)
-          store.commit('setPlayingState', true)
         })
       } else {
         // 存在时就刷新组件

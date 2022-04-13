@@ -43,7 +43,7 @@ export default {
     return {
       sliders: [],
       albums: [],
-      albumDetail: {},
+      albumDetail: null,
       text: '加载中...'
     }
   },
