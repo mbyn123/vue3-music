@@ -29,6 +29,12 @@
         <div class='search-result' v-show='query'>
           <Suggest :query='query' :show-singer='false' @selectSong='selectSuggest'/>
         </div>
+        <Message ref='messageRef'>
+          <div class="message-title">
+            <i class="icon-ok"></i>
+            <span class="text">1首歌曲已经添加到播放列表</span>
+          </div>
+        </Message>
       </div>
     </transition>
   </teleport>
@@ -42,6 +48,7 @@ import Switches from '@/components/base/Switches/Switches'
 import Scroll from '@/components/WrapperScroll'
 import SearchList from '@/components/Search/SearchList'
 import SongList from '@/components/base/SongList/SongList'
+import Message from '@/components/base/Message/Message'
 import { useStore } from 'vuex'
 
 export default {
@@ -52,13 +59,15 @@ export default {
     Switches,
     Scroll,
     SearchList,
-    SongList
+    SongList,
+    Message
   },
   setup() {
     const visible = ref(false)
     const query = ref('')
     const currentIndex = ref(0)
     const scrollRef = ref(null)
+    const messageRef = ref(null)
 
     const store = useStore()
 
@@ -81,8 +90,13 @@ export default {
       await nextTick()
       refreshScroll()
     }
+
     const hide = () => {
       visible.value = false
+    }
+
+    const showMessage = () => {
+      messageRef.value.show()
     }
 
     const addQuery = (value) => {
@@ -102,6 +116,7 @@ export default {
     // 添加当前点击歌曲到播放列表
     const addSong = (song) => {
       store.dispatch('addSong', song)
+      showMessage()
     }
 
     return {
@@ -111,6 +126,7 @@ export default {
       searchHistory,
       playHistory,
       scrollRef,
+      messageRef,
       show,
       hide,
       addQuery,
@@ -182,6 +198,22 @@ export default {
     bottom: 0;
     width: 100%;
     box-sizing: border-box;
+  }
+}
+.message-title {
+  text-align: center;
+  padding: 18px 0;
+  font-size: 0;
+
+  .icon-ok {
+    font-size: $font-size-medium;
+    color: $color-theme;
+    margin-right: 4px;
+  }
+
+  .text {
+    font-size: $font-size-medium;
+    color: $color-text;
   }
 }
 </style>
