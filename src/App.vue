@@ -1,10 +1,16 @@
 <template>
   <Header/>
   <Tab/>
-  <router-view :style='viewStyle'/>
+  <router-view :style="viewStyle" v-slot="{ Component }">
+    <keep-alive>
+      <component :is="Component" />
+    </keep-alive>
+  </router-view>
   <router-view v-slot="{ Component }" :style='viewStyle' name='user'>
     <transition appear name="slide">
-      <component :is="Component"/>
+      <keep-alive>
+        <component :is="Component"/>
+      </keep-alive>
     </transition>
   </router-view>
   <!--播放器-->

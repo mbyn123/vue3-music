@@ -16,14 +16,11 @@ module.exports = {
     before(app) {
       registerRouter(app)
     }
-  }
-  // lintOnSave: false
-  //   configureWebpack: (config) => {
-  //     if (process.env.npm_config_report) {
-  //       const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-  //       config.plugins.push(new BundleAnalyzerPlugin())
-  //     }
-  //   },
-  //   productionSourceMap: false,
-  //   publicPath: process.env.NODE_ENV === 'production' ? '/music-next/' : '/'
+  },
+  chainWebpack: (config) => {
+    config.plugin('webpack-bundle-analyzer')
+      .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
+  },
+  productionSourceMap: false,
+  publicPath: process.env.NODE_ENV === 'production' ? '/music-next/' : '/'
 }

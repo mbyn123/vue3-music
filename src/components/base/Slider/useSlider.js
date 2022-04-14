@@ -1,6 +1,6 @@
 import BScroll from '@better-scroll/core'
 import Slide from '@better-scroll/slide'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, onActivated, onDeactivated } from 'vue'
 
 BScroll.use(Slide)
 
@@ -30,16 +30,16 @@ export default function useSlider(wrapperRef) {
     slider.value.destroy()
   })
 
-  // // keep-alive模式下会进入此生命周期
-  // onActivated(() => {
-  //   slider.value.enable()
-  //   slider.value.refresh()
-  // })
-  //
-  // // keep-alive模式下会进入此生命周期
-  // onDeactivated(() => {
-  //   slider.value.disable()
-  // })
+  // keep-alive模式下会进入此生命周期
+  onActivated(() => {
+    slider.value.enable()
+    slider.value.refresh()
+  })
+
+  // keep-alive模式下会进入此生命周期
+  onDeactivated(() => {
+    slider.value.disable()
+  })
 
   return {
     slider,

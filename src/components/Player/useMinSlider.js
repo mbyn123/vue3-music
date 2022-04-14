@@ -1,4 +1,4 @@
-import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, nextTick, onActivated, onDeactivated, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import BScroll from '@better-scroll/core'
 import Slide from '@better-scroll/slide'
@@ -66,6 +66,17 @@ export default function useMinSlider() {
     if (slider.value) {
       slider.value.destroy()
     }
+  })
+
+  // keep-alive模式下会进入此生命周期
+  onActivated(() => {
+    slider.value.enable()
+    slider.value.refresh()
+  })
+
+  // keep-alive模式下会进入此生命周期
+  onDeactivated(() => {
+    slider.value.disable()
   })
 
   return {
