@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
+const userCenter = () => import('@/views/userCenter.vue')
 const Recommend = () => import('@/views/recommend.vue')
 const Singer = () => import('@/views/singer.vue')
 const TopList = () => import('@/views/topList.vue')
@@ -47,6 +48,9 @@ const routes = [{
       component: SingerDetail
     }
   ]
+}, {
+  path: '/user',
+  component: userCenter
 }]
 
 const router = createRouter({

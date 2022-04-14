@@ -1,11 +1,13 @@
 <template>
   <transition name='mini'>
     <div class='min-player' v-show='!fullScreen' @click='showNormalPlayer'>
+      <!--旋转CD-->
       <div class='cd-wrapper'>
         <div class='cd' ref='cdRef'>
           <img :src='currentSong.pic' width='40' height='40' alt='' :class='cdClass' ref='cdImageRef'>
         </div>
       </div>
+      <!--左右滑动切换歌曲-->
       <div class='slider-wrapper' ref='sliderWrapperRef'>
         <div class='slide-group'>
           <div class='slide-page' v-for='item in playList' :key='item.id'>
@@ -14,14 +16,17 @@
           </div>
         </div>
       </div>
+      <!--收藏按钮-->
       <div class='control'>
         <ProgressCircle :progress='progress'>
           <i class='icon-mini' :class='miniPlayIcon' @click.stop='togglePlay'/>
         </ProgressCircle>
       </div>
+      <!--播放按钮-->
       <div class='control' @click.stop='clickShowPlayList'>
         <i class='icon-playlist'></i>
       </div>
+      <!--播放列表-->
       <PlayList ref='playlistRef'/>
     </div>
   </transition>
