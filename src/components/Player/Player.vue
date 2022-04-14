@@ -168,6 +168,7 @@ export default {
       const audioEl = audioRef.value
       audioEl.src = newSong.url
       audioEl.play()
+      store.commit('setPlayingState', true)
     })
 
     // 监听歌曲播放状态
@@ -212,16 +213,14 @@ export default {
         return
       }
       if (list.length === 1) {
-        return loop()
-      }
-      let index = currentIndex.value + 1
-      // 如果只有一首歌就重复播放当前这首歌
-      if (index === list.length) {
-        index = 0
-      }
-      store.commit('setCurrentIndex', index)
-      if (!playing.value) {
-        store.commit('setPlayingState', true)
+        loop()
+      } else {
+        let index = currentIndex.value + 1
+        // 如果只有一首歌就重复播放当前这首歌
+        if (index === list.length) {
+          index = 0
+        }
+        store.commit('setCurrentIndex', index)
       }
     }
 
@@ -232,15 +231,13 @@ export default {
         return
       }
       if (list.length === 1) {
-        return loop()
-      }
-      let index = currentIndex.value - 1
-      if (index === -1) {
-        index = list.length - 1
-      }
-      store.commit('setCurrentIndex', index)
-      if (!playing.value) {
-        store.commit('setPlayingState', true)
+        loop()
+      } else {
+        let index = currentIndex.value - 1
+        if (index === -1) {
+          index = list.length - 1
+        }
+        store.commit('setCurrentIndex', index)
       }
     }
 

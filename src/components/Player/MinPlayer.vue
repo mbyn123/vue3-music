@@ -16,13 +16,13 @@
           </div>
         </div>
       </div>
-      <!--收藏按钮-->
+      <!--播放按钮-->
       <div class='control'>
         <ProgressCircle :progress='progress'>
           <i class='icon-mini' :class='miniPlayIcon' @click.stop='togglePlay'/>
         </ProgressCircle>
       </div>
-      <!--播放按钮-->
+      <!--播放列表按钮-->
       <div class='control' @click.stop='clickShowPlayList'>
         <i class='icon-playlist'></i>
       </div>

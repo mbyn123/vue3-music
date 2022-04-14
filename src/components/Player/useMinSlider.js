@@ -18,35 +18,34 @@ export default function useMinSlider() {
   onMounted(() => {
     let sliderVal
     watch(sliderShow, async (newValue) => {
-      if (!newValue) {
-        return
+      if (newValue) {
+        // 在组件DOM更新后获取到sliderWrapperRef Dom节点
+        await nextTick()
+        // 组件不存在时
+        if (!sliderVal) {
+          // 注册slide组件
+          sliderVal = slider.value = new BScroll(sliderWrapperRef.value, {
+            click: true,
+            scrollX: true,
+            scrollY: false,
+            momentum: false,
+            bounce: false,
+            probeType: 2,
+            slide: {
+              autoplay: false,
+              loop: true
+            }
+          })
+          // 改变当前播放歌曲
+          sliderVal.on('slidePageChanged', ({ pageX }) => {
+            store.commit('setCurrentIndex', pageX)
+          })
+        } else {
+          // 存在时就刷新组件
+          sliderVal.refresh()
+        }
+        sliderVal.goToPage(currentIndex.value, 0, 0)
       }
-      // 在组件DOM更新后获取到sliderWrapperRef Dom节点
-      await nextTick()
-      // 组件不存在时
-      if (!sliderVal) {
-        // 注册slide组件
-        sliderVal = slider.value = new BScroll(sliderWrapperRef.value, {
-          click: true,
-          scrollX: true,
-          scrollY: false,
-          momentum: false,
-          bounce: false,
-          probeType: 2,
-          slide: {
-            autoplay: false,
-            loop: true
-          }
-        })
-        // 改变当前播放歌曲
-        sliderVal.on('slidePageChanged', ({ pageX }) => {
-          store.commit('setCurrentIndex', pageX)
-        })
-      } else {
-        // 存在时就刷新组件
-        sliderVal.refresh()
-      }
-      sliderVal.goToPage(currentIndex.value, 0, 0)
     })
     // 根据播放的歌曲索引滚动到指定位置
     watch(currentIndex, (newIndex) => {
