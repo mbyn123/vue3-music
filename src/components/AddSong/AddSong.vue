@@ -14,20 +14,20 @@
         <div v-show='!query'>
           <Switches v-model='currentIndex' :items='["播放历史","搜索历史"]'/>
           <div class='list-wrapper'>
-            <Scroll class='list-scroll' v-if='currentIndex === 0'>
+            <Scroll class='list-scroll' ref='scrollRef' v-if='currentIndex === 0'>
               <div class='list-inner'>
-                <SongList :songs='playHistory'/>
+                <SongList :songs='playHistory' @select='selectSongList'/>
               </div>
             </Scroll>
-            <Scroll class='list-scroll' v-if='currentIndex === 1'>
+            <Scroll class='list-scroll' ref='scrollRef' v-if='currentIndex === 1'>
               <div class='list-inner'>
-                <SearchList :searchHistory='searchHistory' :showDelete='false'/>
+                <SearchList :searchHistory='searchHistory' :showDelete='false' @selectItem='addQuery'/>
               </div>
             </Scroll>
           </div>
         </div>
         <div class='search-result' v-show='query'>
-          <Suggest :query='query' :show-singer='false'/>
+          <Suggest :query='query' :show-singer='false' @selectSong='selectSuggest'/>
         </div>
       </div>
     </transition>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import SearchInput from '@/components/Search/SearchInput'
 import Suggest from '@/components/Search/Suggest'
 import Switches from '@/components/base/Switches/Switches'
@@ -58,16 +58,50 @@ export default {
     const visible = ref(false)
     const query = ref('')
     const currentIndex = ref(0)
+    const scrollRef = ref(null)
+
     const store = useStore()
 
     const searchHistory = computed(() => store.state.searchHistory)
     const playHistory = computed(() => store.state.playHistory)
 
-    const show = () => {
+    const refreshScroll = () => {
+      scrollRef.value.scroll.refresh()
+    }
+
+    watch(query, async (newQuery) => {
+      if (!newQuery) {
+        await nextTick()
+        refreshScroll()
+      }
+    })
+
+    const show = async () => {
       visible.value = true
+      await nextTick()
+      refreshScroll()
     }
     const hide = () => {
       visible.value = false
+    }
+
+    const addQuery = (value) => {
+      query.value = value
+    }
+
+    // 选中搜索结果列表中的歌曲
+    const selectSuggest = (song) => {
+      addSong(song)
+    }
+
+    // 选中播放历史列表中的歌曲
+    const selectSongList = ({ item }) => {
+      addSong(item)
+    }
+
+    // 添加当前点击歌曲到播放列表
+    const addSong = (song) => {
+      store.dispatch('addSong', song)
     }
 
     return {
@@ -76,8 +110,12 @@ export default {
       currentIndex,
       searchHistory,
       playHistory,
+      scrollRef,
       show,
-      hide
+      hide,
+      addQuery,
+      selectSuggest,
+      selectSongList
     }
   }
 }
@@ -119,7 +157,6 @@ export default {
 
   .search-input-wrapper {
     margin: 20px;
-    border: 1px solid;
   }
 
   .list-wrapper {
@@ -128,12 +165,10 @@ export default {
     bottom: 0;
     width: 100%;
     box-sizing: border-box;
-    border: 1px solid red;
 
     .list-scroll {
       height: 100%;
       overflow: hidden;
-      border: 1px solid;
 
       .list-inner {
         padding: 20px 30px;
@@ -147,7 +182,6 @@ export default {
     bottom: 0;
     width: 100%;
     box-sizing: border-box;
-    border: 1px solid red;
   }
 }
 </style>

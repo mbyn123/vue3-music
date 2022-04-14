@@ -39,7 +39,7 @@ export default {
       default: true
     }
   },
-  emits: ['emit'],
+  emits: ['emit', 'selectSong', 'selectSinger'],
   setup(props, { emit }) {
     const singer = ref(null)
     const songs = ref([])

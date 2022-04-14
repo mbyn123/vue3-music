@@ -26,6 +26,7 @@ export default {
       type: Boolean
     }
   },
+  emits: ['select'],
   methods: {
     getDesc(song) {
       return `${song.singer}·${song.album}`
@@ -63,21 +64,26 @@ export default {
       width: 25px;
       margin-right: 20px;
       text-align: center;
+
       .icon {
         display: inline-block;
         width: 25px;
         height: 24px;
         background-size: 25px 24px;
+
         &.icon0 {
           @include bg-image('first');
         }
+
         &.icon1 {
           @include bg-image('second');
         }
+
         &.icon2 {
           @include bg-image('third');
         }
       }
+
       .text {
         color: $color-theme;
         font-size: $font-size-large;
