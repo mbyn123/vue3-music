@@ -56,3 +56,7 @@ const deleteArray = (arr, compare) => {
     arr.splice(index, 1)
   }
 }
+
+export const saveAll = (item, key) => {
+  storage.set(key, item)
+}

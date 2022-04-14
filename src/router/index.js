@@ -50,7 +50,9 @@ const routes = [{
   ]
 }, {
   path: '/user',
-  component: userCenter
+  components: {
+    user: userCenter
+  }
 }]
 
 const router = createRouter({
