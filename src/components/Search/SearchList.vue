@@ -4,7 +4,7 @@
       <li class='search-item' v-for='item in searchHistory' :key='item' @click='selectItem(item)'>
         <span class='text'>{{ item }}</span>
         <span class='icon' @click.stop='deleteItem(item)'>
-        <i class='icon-delete'></i>
+        <i class='icon-delete' v-if='showDelete'></i>
       </span>
       </li>
     </transition-group>
@@ -18,6 +18,10 @@ export default {
     searchHistory: {
       type: Array,
       default: () => []
+    },
+    showDelete: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {

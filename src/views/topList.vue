@@ -4,7 +4,7 @@
       <ul>
         <li class='item' v-for='item in topList' :key='item.id' @click='selectTopItem(item)'>
           <div class='icon'>
-            <img :src='item.pic' alt='' width='100' height='100'>
+            <img v-lazy='item.pic' alt='' width='100' height='100'>
           </div>
           <ul class='song-list'>
             <li class='song' v-for='(song,index) in item.songList' :key='song.id'>

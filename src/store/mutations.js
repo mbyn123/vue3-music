@@ -38,6 +38,9 @@ const mutations = {
   },
   setSearchHistory(state, searches) {
     state.searchHistory = searches
+  },
+  setPlayHistory(state, playSong) {
+    state.playHistory = playSong
   }
 }
 

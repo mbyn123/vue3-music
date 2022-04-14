@@ -93,6 +93,7 @@ import { PLAY_MODE } from '@/assets/js/constant'
 import ProgressBar from '@/components/Player/ProgressBar'
 import Scroll from '@/components/base/Scroll/Scroll'
 import MinPlayer from '@/components/Player/MinPlayer'
+import usePlayHistory from '@/components/Player/usePlayHistory'
 
 export default {
   name: 'Player',
@@ -136,6 +137,8 @@ export default {
     } = useInteractive()
 
     const { cdWrapperRef, enter, afterEnter, leave, afterLeave } = useAnimation()
+
+    const { savePlay } = usePlayHistory()
 
     const currentSong = computed(() => store.getters.currentSong)
     const fullScreen = computed(() => store.state.fullScreen)
@@ -262,6 +265,7 @@ export default {
       }
       songReady.value = true
       playLyric()
+      savePlay(currentSong.value)
     }
 
     // 播放器播放异常回调
